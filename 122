@@ -1,0 +1,3715 @@
+Option Explicit
+Private Declare Function OpenClipboard Lib "user32.dll" (ByVal hWnd As Long) As Long
+Private Declare Function EmptyClipboard Lib "user32.dll" () As Long
+Private Declare Function CloseClipboard Lib "user32.dll" () As Long
+Private Declare Function IsClipboardFormatAvailable Lib "user32.dll" (ByVal wFormat As Long) As Long
+Private Declare Function GetClipboardData Lib "user32.dll" (ByVal wFormat As Long) As Long
+Private Declare Function SetClipboardData Lib "user32.dll" (ByVal wFormat As Long, ByVal hMem As Long) As Long
+Private Declare Function GlobalAlloc Lib "kernel32.dll" (ByVal wFlags As Long, ByVal dwBytes As Long) As Long
+Private Declare Function GlobalLock Lib "kernel32.dll" (ByVal hMem As Long) As Long
+Private Declare Function GlobalUnlock Lib "kernel32.dll" (ByVal hMem As Long) As Long
+Private Declare Function GlobalSize Lib "kernel32" (ByVal hMem As Long) As Long
+Private Declare Function lstrcpy Lib "kernel32.dll" Alias "lstrcpyW" (ByVal lpString1 As Long, ByVal lpString2 As Long) As Long
+
+Public arrCountryNames() As String
+
+Private mlngParaStartFrench As Long
+Private mlngParaStartSpanish As Long
+
+Private txtMatchesFound As String
+
+Public Sub fnCreateCountryList()
+
+    'Size of countrylist - currently 193, if you want to add, increase this number
+    ReDim arrCountryNames(193, 5)
+    
+   
+    'Format (row, column), column=1 name_E
+    arrCountryNames(1, 1) = "Afghanistan"
+    arrCountryNames(2, 1) = "Angola"
+    arrCountryNames(3, 1) = "Albania"
+    arrCountryNames(4, 1) = "Andorra"
+    arrCountryNames(5, 1) = "United Arab Emirates"
+    arrCountryNames(6, 1) = "Argentina"
+    arrCountryNames(7, 1) = "Armenia"
+    arrCountryNames(8, 1) = "Antigua and Barbuda"
+    arrCountryNames(9, 1) = "Australia"
+    arrCountryNames(10, 1) = "Austria"
+    arrCountryNames(11, 1) = "Azerbaijan"
+    arrCountryNames(12, 1) = "Burundi"
+    arrCountryNames(13, 1) = "Belgium"
+    arrCountryNames(14, 1) = "Benin"
+    arrCountryNames(15, 1) = "Burkina Faso"
+    arrCountryNames(16, 1) = "Bangladesh"
+    arrCountryNames(17, 1) = "Bulgaria"
+    arrCountryNames(18, 1) = "Kingdom of Bahrain#Bahrain, Kingdom of#Bahrain"
+    arrCountryNames(19, 1) = "Bahamas"
+    arrCountryNames(20, 1) = "Bosnia and Herzegovina"
+    arrCountryNames(21, 1) = "Belarus"
+    arrCountryNames(22, 1) = "Belize"
+    arrCountryNames(23, 1) = "Plurinational State of Bolivia#Bolivia#Bolivia, Plurinational State of"
+    arrCountryNames(24, 1) = "Brazil"
+    arrCountryNames(25, 1) = "Barbados"
+    arrCountryNames(26, 1) = "Brunei Darussalam"
+    arrCountryNames(27, 1) = "Bhutan"
+    arrCountryNames(28, 1) = "Botswana"
+    arrCountryNames(29, 1) = "Central African Republic"
+    arrCountryNames(30, 1) = "Canada"
+    arrCountryNames(31, 1) = "Switzerland"
+    arrCountryNames(32, 1) = "Chile"
+    arrCountryNames(33, 1) = "China"
+    arrCountryNames(34, 1) = "Côte d'Ivoire"
+    arrCountryNames(35, 1) = "Cameroon"
+    arrCountryNames(36, 1) = "Democratic Republic of the Congo#DEMOCRATIC REPUBLIC OF CONGO"
+    arrCountryNames(37, 1) = "Congo"
+    arrCountryNames(38, 1) = "Colombia"
+    arrCountryNames(39, 1) = "Comoros"
+    arrCountryNames(40, 1) = "Cabo Verde"
+    arrCountryNames(41, 1) = "Costa Rica"
+    arrCountryNames(42, 1) = "Cuba"
+    arrCountryNames(43, 1) = "Cyprus"
+    arrCountryNames(44, 1) = "Czech Republic"
+    arrCountryNames(45, 1) = "Germany"
+    arrCountryNames(46, 1) = "Djibouti"
+    arrCountryNames(47, 1) = "Dominica"
+    arrCountryNames(48, 1) = "Denmark"
+    arrCountryNames(49, 1) = "Dominican Republic"
+    arrCountryNames(50, 1) = "Algeria"
+    arrCountryNames(51, 1) = "Ecuador"
+    arrCountryNames(52, 1) = "formerly European Communities"
+     arrCountryNames(53, 1) = "Egypt"
+    arrCountryNames(54, 1) = "Spain"
+    arrCountryNames(55, 1) = "Estonia"
+    arrCountryNames(56, 1) = "Ethiopia"
+    arrCountryNames(57, 1) = "European Union"
+    arrCountryNames(58, 1) = "Finland"
+    arrCountryNames(59, 1) = "Fiji"
+    arrCountryNames(60, 1) = "France"
+    arrCountryNames(61, 1) = "Gabon"
+    arrCountryNames(62, 1) = "United Kingdom"
+    arrCountryNames(63, 1) = "Georgia"
+    arrCountryNames(64, 1) = "Ghana"
+    arrCountryNames(65, 1) = "Guinea"
+    arrCountryNames(66, 1) = "The Gambia"
+    arrCountryNames(67, 1) = "Guinea Bissau#GUINEA" & Chr(30) & "BISSAU"
+    arrCountryNames(68, 1) = "Equatorial Guinea"
+    arrCountryNames(69, 1) = "Greece"
+    arrCountryNames(70, 1) = "Grenada"
+    arrCountryNames(71, 1) = "Guatemala"
+    arrCountryNames(72, 1) = "Guyana"
+    arrCountryNames(73, 1) = "Hong Kong, China"
+    arrCountryNames(74, 1) = "Honduras"
+    arrCountryNames(75, 1) = "Croatia"
+    arrCountryNames(76, 1) = "Haiti"
+    arrCountryNames(77, 1) = "Hungary"
+    arrCountryNames(78, 1) = "Indonesia"
+    arrCountryNames(79, 1) = "India"
+    arrCountryNames(80, 1) = "Ireland"
+    arrCountryNames(81, 1) = "Iran"
+    arrCountryNames(82, 1) = "Iraq"
+    arrCountryNames(83, 1) = "Iceland"
+    arrCountryNames(84, 1) = "Israel"
+    arrCountryNames(85, 1) = "Italy"
+    arrCountryNames(86, 1) = "Jamaica"
+    arrCountryNames(87, 1) = "Jordan"
+    arrCountryNames(88, 1) = "Japan"
+    arrCountryNames(89, 1) = "Kazakhstan"
+    arrCountryNames(90, 1) = "Kenya"
+    arrCountryNames(91, 1) = "Kyrgyz Republic"
+    arrCountryNames(92, 1) = "Cambodia"
+    arrCountryNames(93, 1) = "Saint Kitts and Nevis"
+    arrCountryNames(94, 1) = "Republic of Korea#Korea, Republic of#Korea"
+    arrCountryNames(95, 1) = "The State of Kuwait#Kuwait, The State of"
+    arrCountryNames(96, 1) = "Lao People's Democratic Republic"
+    arrCountryNames(97, 1) = "Lebanon#Lebanese Republic"
+    arrCountryNames(98, 1) = "Liberia"
+    arrCountryNames(99, 1) = "Libya"
+    arrCountryNames(100, 1) = "Saint Lucia"
+    arrCountryNames(101, 1) = "Liechtenstein"
+    arrCountryNames(102, 1) = "Sri Lanka"
+    arrCountryNames(103, 1) = "Lesotho"
+    arrCountryNames(104, 1) = "Lithuania"
+    arrCountryNames(105, 1) = "Luxembourg"
+    arrCountryNames(106, 1) = "Latvia"
+    arrCountryNames(107, 1) = "Macao, China"
+    arrCountryNames(108, 1) = "Morocco"
+    arrCountryNames(109, 1) = "Republic of Moldova#Moldova"
+    arrCountryNames(110, 1) = "Madagascar"
+    arrCountryNames(111, 1) = "Maldives"
+    arrCountryNames(112, 1) = "Mexico"
+    arrCountryNames(113, 1) = "North Macedonia"
+    arrCountryNames(114, 1) = "Mali"
+    arrCountryNames(115, 1) = "Malta"
+    arrCountryNames(116, 1) = "Myanmar"
+    arrCountryNames(117, 1) = "Montenegro"
+    arrCountryNames(118, 1) = "Mongolia"
+    arrCountryNames(119, 1) = "Mozambique"
+    arrCountryNames(120, 1) = "Mauritania"
+    arrCountryNames(121, 1) = "Mauritius"
+    arrCountryNames(122, 1) = "Malawi"
+    arrCountryNames(123, 1) = "Malaysia"
+    arrCountryNames(124, 1) = "Namibia"
+    arrCountryNames(125, 1) = "Niger"
+    arrCountryNames(126, 1) = "Nigeria"
+    arrCountryNames(127, 1) = "Nicaragua"
+    arrCountryNames(128, 1) = "Netherlands"
+    arrCountryNames(129, 1) = "Norway"
+    arrCountryNames(130, 1) = "Nepal"
+    arrCountryNames(131, 1) = "New Zealand"
+    arrCountryNames(132, 1) = "Oman"
+    arrCountryNames(133, 1) = "Pakistan"
+    arrCountryNames(134, 1) = "Panama"
+    arrCountryNames(135, 1) = "Peru"
+    arrCountryNames(136, 1) = "Philippines"
+    arrCountryNames(137, 1) = "Papua New Guinea"
+    arrCountryNames(138, 1) = "Poland"
+    arrCountryNames(139, 1) = "Portugal"
+    arrCountryNames(140, 1) = "Paraguay"
+    arrCountryNames(141, 1) = "Qatar"
+    arrCountryNames(142, 1) = "Romania"
+    arrCountryNames(143, 1) = "Russian Federation"
+    arrCountryNames(144, 1) = "Rwanda"
+    arrCountryNames(145, 1) = "Kingdom of Saudi Arabia#Saudi Arabia"
+    arrCountryNames(146, 1) = "Serbia and Montenegro"
+    arrCountryNames(147, 1) = "Sudan"
+    arrCountryNames(148, 1) = "Senegal"
+    arrCountryNames(149, 1) = "Singapore"
+    arrCountryNames(150, 1) = "Solomon Islands"
+    arrCountryNames(151, 1) = "Sierra Leone"
+    arrCountryNames(152, 1) = "El Salvador#Salvador"
+    arrCountryNames(153, 1) = "Somalia"
+    arrCountryNames(154, 1) = "Serbia"
+    arrCountryNames(155, 1) = "South Sudan"
+    arrCountryNames(156, 1) = "Sao Tome and Principe#Sao Tomé and Principe"
+    arrCountryNames(157, 1) = "Suriname"
+    arrCountryNames(158, 1) = "Slovak Republic"
+    arrCountryNames(159, 1) = "Slovenia"
+    arrCountryNames(160, 1) = "Sweden"
+    arrCountryNames(161, 1) = "Eswatini"
+    arrCountryNames(162, 1) = "Seychelles"
+    arrCountryNames(163, 1) = "Syrian Arab Republic#Syria"
+    arrCountryNames(164, 1) = "Chad"
+    arrCountryNames(165, 1) = "Togo"
+    arrCountryNames(166, 1) = "Thailand"
+    arrCountryNames(167, 1) = "Tajikistan"
+    arrCountryNames(168, 1) = "Turkmenistan"
+    arrCountryNames(169, 1) = "Timor-Leste#Timor Leste"
+    arrCountryNames(170, 1) = "Tonga"
+    arrCountryNames(171, 1) = "The Separate Customs Territory of Taiwan, Penghu, Kinmen and Matsu#Chinese Taipei"
+    arrCountryNames(172, 1) = "Trinidad and Tobago"
+    arrCountryNames(173, 1) = "Tunisia"
+    arrCountryNames(174, 1) = "Türkiye" ' "Türkiye"
+    arrCountryNames(175, 1) = "Tanzania"
+    arrCountryNames(176, 1) = "Uganda"
+    arrCountryNames(177, 1) = "Ukraine"
+    arrCountryNames(178, 1) = "Uruguay"
+    arrCountryNames(179, 1) = "United States of America#United States"
+    arrCountryNames(180, 1) = "Uzbekistan"
+    arrCountryNames(181, 1) = "Saint Vincent & the Grenadines#Saint Vincent and the Grenadines"
+    arrCountryNames(182, 1) = "Bolivarian Republic of Venezuela#THE BOLIVARIAN REPUBLIC OF VENEZUELA#Venezuela"
+    arrCountryNames(183, 1) = "Vietnam#viet nam"
+    arrCountryNames(184, 1) = "Vanuatu"
+    arrCountryNames(185, 1) = "Samoa"
+    arrCountryNames(186, 1) = "Holy see"
+    arrCountryNames(187, 1) = "Yemen"
+    arrCountryNames(188, 1) = "South Africa"
+    arrCountryNames(189, 1) = "Zambia"
+    arrCountryNames(190, 1) = "Zimbabwe"
+    
+    
+   
+    'Format (row, column), column=2 name_F
+    arrCountryNames(1, 2) = "Afghanistan"
+    arrCountryNames(2, 2) = "Angola"
+    arrCountryNames(3, 2) = "Albanie"
+    arrCountryNames(4, 2) = "Andorre"
+    arrCountryNames(5, 2) = "Émirats arabes unis"
+    arrCountryNames(6, 2) = "Argentine"
+    arrCountryNames(7, 2) = "Arménie"
+    arrCountryNames(8, 2) = "Antigua-et-Barbuda"
+    arrCountryNames(9, 2) = "Australie"
+    arrCountryNames(10, 2) = "Autriche"
+    arrCountryNames(11, 2) = "Azerbaïdjan"
+    arrCountryNames(12, 2) = "Burundi"
+    arrCountryNames(13, 2) = "Belgique"
+    arrCountryNames(14, 2) = "Bénin"
+    arrCountryNames(15, 2) = "Burkina Faso"
+    arrCountryNames(16, 2) = "Bangladesh"
+    arrCountryNames(17, 2) = "Bulgarie"
+    arrCountryNames(18, 2) = "Royaume de Bahreïn"
+    arrCountryNames(19, 2) = "Bahamas"
+    arrCountryNames(20, 2) = "Bosnie-Herzégovine"
+    arrCountryNames(21, 2) = "Bélarus"
+    arrCountryNames(22, 2) = "Belize"
+    arrCountryNames(23, 2) = "État Pluritanional de Bolivie"
+    arrCountryNames(24, 2) = "Brésil"
+    arrCountryNames(25, 2) = "Barbade"
+    arrCountryNames(26, 2) = "Brunéi Darussalam"
+    arrCountryNames(27, 2) = "Bhoutan"
+    arrCountryNames(28, 2) = "Botswana"
+    arrCountryNames(29, 2) = "République centrafricaine"
+    arrCountryNames(30, 2) = "Canada"
+    arrCountryNames(31, 2) = "Suisse"
+    arrCountryNames(32, 2) = "Chili"
+    arrCountryNames(33, 2) = "Chine"
+    arrCountryNames(34, 2) = "Côte d'Ivoire"
+    arrCountryNames(35, 2) = "Cameroun"
+    arrCountryNames(36, 2) = "République démocratique du Congo"
+    arrCountryNames(37, 2) = "Congo"
+    arrCountryNames(38, 2) = "Colombie"
+    arrCountryNames(39, 2) = "Comores"
+    arrCountryNames(40, 2) = "Cabo Verde"
+    arrCountryNames(41, 2) = "Costa Rica"
+    arrCountryNames(42, 2) = "Cuba"
+    arrCountryNames(43, 2) = "Chypre"
+    arrCountryNames(44, 2) = "République tchèque"
+    arrCountryNames(45, 2) = "Allemagne"
+    arrCountryNames(46, 2) = "Djibouti"
+    arrCountryNames(47, 2) = "Dominique"
+    arrCountryNames(48, 2) = "Danemark"
+    arrCountryNames(49, 2) = "République dominicaine"
+    arrCountryNames(50, 2) = "Algérie"
+    arrCountryNames(51, 2) = "Équateur"
+    arrCountryNames(52, 2) = "anciennement Communautés européennes"
+    arrCountryNames(53, 2) = "Égypte"
+    arrCountryNames(54, 2) = "Espagne"
+    arrCountryNames(55, 2) = "Estonie"
+    arrCountryNames(56, 2) = "Éthiopie"
+    arrCountryNames(57, 2) = "Union européenne"
+    arrCountryNames(58, 2) = "Finlande"
+    arrCountryNames(59, 2) = "Fidji"
+    arrCountryNames(60, 2) = "France"
+    arrCountryNames(61, 2) = "Gabon"
+    arrCountryNames(62, 2) = "Royaume-Uni"
+    arrCountryNames(63, 2) = "Géorgie"
+    arrCountryNames(64, 2) = "Ghana"
+    arrCountryNames(65, 2) = "Guinée"
+    arrCountryNames(66, 2) = "Gambie"
+    arrCountryNames(67, 2) = "Guinée-Bissau#GUINEA" & "\1^0150\2" & "BISSAU"
+    arrCountryNames(68, 2) = "Guinée équatoriale"
+    arrCountryNames(69, 2) = "Grèce"
+    arrCountryNames(70, 2) = "Grenade"
+    arrCountryNames(71, 2) = "Guatemala"
+    arrCountryNames(72, 2) = "Guyana"
+    arrCountryNames(73, 2) = "Hong Kong, Chine"
+    arrCountryNames(74, 2) = "Honduras"
+    arrCountryNames(75, 2) = "Croatie"
+    arrCountryNames(76, 2) = "Haïti"
+    arrCountryNames(77, 2) = "Hongrie"
+    arrCountryNames(78, 2) = "Indonésie"
+    arrCountryNames(79, 2) = "Inde"
+    arrCountryNames(80, 2) = "Irlande"
+    arrCountryNames(81, 2) = "Iran"
+    arrCountryNames(82, 2) = "Iraq"
+    arrCountryNames(83, 2) = "Islande"
+    arrCountryNames(84, 2) = "Israël"
+    arrCountryNames(85, 2) = "Italie"
+    arrCountryNames(86, 2) = "Jamaïque"
+    arrCountryNames(87, 2) = "Jordanie"
+    arrCountryNames(88, 2) = "Japon"
+    arrCountryNames(89, 2) = "Kazakhstan"
+    arrCountryNames(90, 2) = "Kenya"
+    arrCountryNames(91, 2) = "République kirghize"
+    arrCountryNames(92, 2) = "Cambodge"
+    arrCountryNames(93, 2) = "Saint-Kitts-et-Nevis"
+    arrCountryNames(94, 2) = "République de Corée"
+    arrCountryNames(95, 2) = "État du Koweït"
+    arrCountryNames(96, 2) = "République démocratique populaire lao"
+    arrCountryNames(97, 2) = "République libanaise"
+    arrCountryNames(98, 2) = "Libéria"
+    arrCountryNames(99, 2) = "Libye"
+    arrCountryNames(100, 2) = "Sainte-Lucie"
+    arrCountryNames(101, 2) = "Liechtenstein"
+    arrCountryNames(102, 2) = "Sri Lanka"
+    arrCountryNames(103, 2) = "Lesotho"
+    arrCountryNames(104, 2) = "Lituanie"
+    arrCountryNames(105, 2) = "Luxembourg"
+    arrCountryNames(106, 2) = "Lettonie"
+    arrCountryNames(107, 2) = "Macao, Chine"
+    arrCountryNames(108, 2) = "Maroc"
+    arrCountryNames(109, 2) = "République de Moldova"
+    arrCountryNames(110, 2) = "Madagascar"
+    arrCountryNames(111, 2) = "Maldives"
+    arrCountryNames(112, 2) = "Mexique"
+    arrCountryNames(113, 2) = "Macédoine du Nord"
+    arrCountryNames(114, 2) = "Mali"
+    arrCountryNames(115, 2) = "Malte"
+    arrCountryNames(116, 2) = "Myanmar"
+    arrCountryNames(117, 2) = "Monténégro"
+    arrCountryNames(118, 2) = "Mongolie"
+    arrCountryNames(119, 2) = "Mozambique"
+    arrCountryNames(120, 2) = "Mauritanie"
+    arrCountryNames(121, 2) = "Maurice"
+    arrCountryNames(122, 2) = "Malawi"
+    arrCountryNames(123, 2) = "Malaisie"
+    arrCountryNames(124, 2) = "Namibie"
+    arrCountryNames(125, 2) = "Niger"
+    arrCountryNames(126, 2) = "Nigéria"
+    arrCountryNames(127, 2) = "Nicaragua"
+    arrCountryNames(128, 2) = "Pays-Bas"
+    arrCountryNames(129, 2) = "Norvège"
+    arrCountryNames(130, 2) = "Népal"
+    arrCountryNames(131, 2) = "Nouvelle-Zélande"
+    arrCountryNames(132, 2) = "Oman"
+    arrCountryNames(133, 2) = "Pakistan"
+    arrCountryNames(134, 2) = "Panama"
+    arrCountryNames(135, 2) = "Pérou"
+    arrCountryNames(136, 2) = "Philippines"
+    arrCountryNames(137, 2) = "Papouasie-Nouvelle-Guinée"
+    arrCountryNames(138, 2) = "Pologne"
+    arrCountryNames(139, 2) = "Portugal"
+    arrCountryNames(140, 2) = "Paraguay"
+    arrCountryNames(141, 2) = "Qatar"
+    arrCountryNames(142, 2) = "Roumanie"
+    arrCountryNames(143, 2) = "Fédération de Russie"
+    arrCountryNames(144, 2) = "Rwanda"
+    arrCountryNames(145, 2) = "Royaume d'Arabie saoudite"
+    arrCountryNames(146, 2) = "Serbie-et-Monténégro"
+    arrCountryNames(147, 2) = "Soudan"
+    arrCountryNames(148, 2) = "Sénégal"
+    arrCountryNames(149, 2) = "Singapour"
+    arrCountryNames(150, 2) = "Îles Salomon"
+    arrCountryNames(151, 2) = "Sierra Leone"
+    arrCountryNames(152, 2) = "El Salvador"
+    arrCountryNames(153, 2) = "Somalie"
+    arrCountryNames(154, 2) = "Serbie"
+    arrCountryNames(155, 2) = "Soudan du Sud"
+    arrCountryNames(156, 2) = "Sao Tomé-et-Principe"
+    arrCountryNames(157, 2) = "Suriname"
+    arrCountryNames(158, 2) = "République slovaque"
+    arrCountryNames(159, 2) = "Slovénie"
+    arrCountryNames(160, 2) = "Suède"
+    arrCountryNames(161, 2) = "Eswatini"
+    arrCountryNames(162, 2) = "Seychelles"
+    arrCountryNames(163, 2) = "République arabe syrienne"
+    arrCountryNames(164, 2) = "Tchad"
+    arrCountryNames(165, 2) = "Togo"
+    arrCountryNames(166, 2) = "Thaïlande"
+    arrCountryNames(167, 2) = "Tadjikistan"
+    arrCountryNames(168, 2) = "Turkménistan"
+    arrCountryNames(169, 2) = "Timor-Leste"
+    arrCountryNames(170, 2) = "Tonga"
+    arrCountryNames(171, 2) = " Territoire douanier distinct de Taiwan, Penghu, Kinmen et Matsu"
+    arrCountryNames(172, 2) = "Trinité-et-Tobago"
+    arrCountryNames(173, 2) = "Tunisie"
+    arrCountryNames(174, 2) = "Türkiye" ' "Türkiye"
+    arrCountryNames(175, 2) = "Tanzanie"
+    arrCountryNames(176, 2) = "Ouganda"
+    arrCountryNames(177, 2) = "Ukraine"
+    arrCountryNames(178, 2) = "Uruguay"
+    arrCountryNames(179, 2) = "États-Unis"
+    arrCountryNames(180, 2) = "Ouzbékistan"
+    arrCountryNames(181, 2) = "Saint-Vincent-et-les Grenadines"
+    arrCountryNames(182, 2) = "République bolivarienne du Venezuela"
+    arrCountryNames(183, 2) = "Viet Nam"
+    arrCountryNames(184, 2) = "Vanuatu"
+    arrCountryNames(185, 2) = "Samoa"
+    arrCountryNames(186, 2) = "Saint-Siège"
+    arrCountryNames(187, 2) = "Yémen"
+    arrCountryNames(188, 2) = "Afrique du Sud"
+    arrCountryNames(189, 2) = "Zambie"
+    arrCountryNames(190, 2) = "Zimbabwe"
+    
+    'Format (row, column), column=3 name_S
+    arrCountryNames(1, 3) = "Afganistán"
+    arrCountryNames(2, 3) = "Angola"
+    arrCountryNames(3, 3) = "Albania"
+    arrCountryNames(4, 3) = "Andorra"
+    arrCountryNames(5, 3) = "Emiratos Árabes Unidos"
+    arrCountryNames(6, 3) = "Argentina"
+    arrCountryNames(7, 3) = "Armenia"
+    arrCountryNames(8, 3) = "Antigua y Barbuda"
+    arrCountryNames(9, 3) = "Australia"
+    arrCountryNames(10, 3) = "Austria"
+    arrCountryNames(11, 3) = "Azerbaiyán"
+    arrCountryNames(12, 3) = "Burundi"
+    arrCountryNames(13, 3) = "Bélgica"
+    arrCountryNames(14, 3) = "Benin"
+    arrCountryNames(15, 3) = "Burkina Faso"
+    arrCountryNames(16, 3) = "Bangladesh"
+    arrCountryNames(17, 3) = "Bulgaria"
+    arrCountryNames(18, 3) = "Reino de Bahrein"
+    arrCountryNames(19, 3) = "Bahamas"
+    arrCountryNames(20, 3) = "Bosnia y Herzegovina"
+    arrCountryNames(21, 3) = "Belarús"
+    arrCountryNames(22, 3) = "Belice"
+    arrCountryNames(23, 3) = "Estado Plurinacional de Bolivia"
+    arrCountryNames(24, 3) = "Brasil"
+    arrCountryNames(25, 3) = "Barbados"
+    arrCountryNames(26, 3) = "Brunei Darussalam"
+    arrCountryNames(27, 3) = "Bhután"
+    arrCountryNames(28, 3) = "Botswana"
+    arrCountryNames(29, 3) = "República Centroafricana"
+    arrCountryNames(30, 3) = "Canadá"
+    arrCountryNames(31, 3) = "Suiza"
+    arrCountryNames(32, 3) = "Chile"
+    arrCountryNames(33, 3) = "China"
+    arrCountryNames(34, 3) = "Côte d'Ivoire"
+    arrCountryNames(35, 3) = "Camerún"
+    arrCountryNames(36, 3) = "República Democrática del Congo"
+    arrCountryNames(37, 3) = "Congo"
+    arrCountryNames(38, 3) = "Colombia"
+    arrCountryNames(39, 3) = "Comoras"
+    arrCountryNames(40, 3) = "Cabo Verde"
+    arrCountryNames(41, 3) = "Costa Rica"
+    arrCountryNames(42, 3) = "Cuba"
+    arrCountryNames(43, 3) = "Chipre"
+    arrCountryNames(44, 3) = "República Checa"
+    arrCountryNames(45, 3) = "Alemania"
+    arrCountryNames(46, 3) = "Djibouti"
+    arrCountryNames(47, 3) = "Dominica"
+    arrCountryNames(48, 3) = "Dinamarca"
+    arrCountryNames(49, 3) = "República Dominicana"
+    arrCountryNames(50, 3) = "Argelia"
+    arrCountryNames(51, 3) = "Ecuador"
+    arrCountryNames(52, 3) = "antes, Comunidades Europeas"
+    arrCountryNames(53, 3) = "Egipto"
+    arrCountryNames(54, 3) = "España"
+    arrCountryNames(55, 3) = "Estonia"
+    arrCountryNames(56, 3) = "Etiopía"
+    arrCountryNames(57, 3) = "Unión Europea"
+    arrCountryNames(58, 3) = "Finlandia"
+    arrCountryNames(59, 3) = "Fiji"
+    arrCountryNames(60, 3) = "Francia"
+    arrCountryNames(61, 3) = "Gabón"
+    arrCountryNames(62, 3) = "Reino Unido"
+    arrCountryNames(63, 3) = "Georgia"
+    arrCountryNames(64, 3) = "Ghana"
+    arrCountryNames(65, 3) = "Guinea"
+    arrCountryNames(66, 3) = "Gambia"
+    arrCountryNames(67, 3) = "Guinea-Bissau"
+    arrCountryNames(68, 3) = "Guinea Ecuatorial"
+    arrCountryNames(69, 3) = "Grecia"
+    arrCountryNames(70, 3) = "Granada"
+    arrCountryNames(71, 3) = "Guatemala"
+    arrCountryNames(72, 3) = "Guyana"
+    arrCountryNames(73, 3) = "Hong Kong, China"
+    arrCountryNames(74, 3) = "Honduras"
+    arrCountryNames(75, 3) = "Croacia"
+    arrCountryNames(76, 3) = "Haití"
+    arrCountryNames(77, 3) = "Hungría"
+    arrCountryNames(78, 3) = "Indonesia"
+    arrCountryNames(79, 3) = "India"
+    arrCountryNames(80, 3) = "Irlanda"
+    arrCountryNames(81, 3) = "Irán"
+    arrCountryNames(82, 3) = "Iraq"
+    arrCountryNames(83, 3) = "Islandia"
+    arrCountryNames(84, 3) = "Israel"
+    arrCountryNames(85, 3) = "Italia"
+    arrCountryNames(86, 3) = "Jamaica"
+    arrCountryNames(87, 3) = "Jordania"
+    arrCountryNames(88, 3) = "Japón"
+    arrCountryNames(89, 3) = "Kazajstán"
+    arrCountryNames(90, 3) = "Kenya"
+    arrCountryNames(91, 3) = "República Kirguisa"
+    arrCountryNames(92, 3) = "Camboya"
+    arrCountryNames(93, 3) = "Saint Kitts y Nevis"
+    arrCountryNames(94, 3) = "República de Corea"
+    arrCountryNames(95, 3) = "Estado de Kuwait"
+    arrCountryNames(96, 3) = "República Democrática Popular Lao"
+    arrCountryNames(97, 3) = "República libanesa"
+    arrCountryNames(98, 3) = "Liberia"
+    arrCountryNames(99, 3) = "Libia"
+    arrCountryNames(100, 3) = "Santa Lucía"
+    arrCountryNames(101, 3) = "Liechtenstein"
+    arrCountryNames(102, 3) = "Sri Lanka"
+    arrCountryNames(103, 3) = "Lesotho"
+    arrCountryNames(104, 3) = "Lituania"
+    arrCountryNames(105, 3) = "Luxemburgo"
+    arrCountryNames(106, 3) = "Letonia"
+    arrCountryNames(107, 3) = "Macao, China"
+    arrCountryNames(108, 3) = "Marruecos"
+    arrCountryNames(109, 3) = "República de Moldova "
+    arrCountryNames(110, 3) = "Madagascar"
+    arrCountryNames(111, 3) = "Maldivas"
+    arrCountryNames(112, 3) = "México"
+    arrCountryNames(113, 3) = "Macedonia del Norte"
+    arrCountryNames(114, 3) = "Malí"
+    arrCountryNames(115, 3) = "Malta"
+    arrCountryNames(116, 3) = "Myanmar"
+    arrCountryNames(117, 3) = "Montenegro"
+    arrCountryNames(118, 3) = "Mongolia"
+    arrCountryNames(119, 3) = "Mozambique"
+    arrCountryNames(120, 3) = "Mauritania"
+    arrCountryNames(121, 3) = "Mauricio"
+    arrCountryNames(122, 3) = "Malawi"
+    arrCountryNames(123, 3) = "Malasia"
+    arrCountryNames(124, 3) = "Namibia"
+    arrCountryNames(125, 3) = "Níger"
+    arrCountryNames(126, 3) = "Nigeria"
+    arrCountryNames(127, 3) = "Nicaragua"
+    arrCountryNames(128, 3) = "Países Bajos"
+    arrCountryNames(129, 3) = "Noruega"
+    arrCountryNames(130, 3) = "Nepal"
+    arrCountryNames(131, 3) = "Nueva Zelandia"
+    arrCountryNames(132, 3) = "Omán"
+    arrCountryNames(133, 3) = "Pakistán"
+    arrCountryNames(134, 3) = "Panamá"
+    arrCountryNames(135, 3) = "Perú"
+    arrCountryNames(136, 3) = "Filipinas"
+    arrCountryNames(137, 3) = "Papua Nueva Guinea"
+    arrCountryNames(138, 3) = "Polonia"
+    arrCountryNames(139, 3) = "Portugal"
+    arrCountryNames(140, 3) = "Paraguay"
+    arrCountryNames(141, 3) = "Qatar"
+    arrCountryNames(142, 3) = "Rumania"
+    arrCountryNames(143, 3) = "Federación de Rusia"
+    arrCountryNames(144, 3) = "Rwanda"
+    arrCountryNames(145, 3) = "Reino de la Arabia Saudita"
+    arrCountryNames(146, 3) = "Serbia y Montenegro"
+    arrCountryNames(147, 3) = "Sudán"
+    arrCountryNames(148, 3) = "Senegal"
+    arrCountryNames(149, 3) = "Singapur"
+    arrCountryNames(150, 3) = "Islas Salomón"
+    arrCountryNames(151, 3) = "Sierra Leona"
+    arrCountryNames(152, 3) = "El Salvador"
+    arrCountryNames(153, 3) = "Somalia"
+    arrCountryNames(154, 3) = "Serbia"
+    arrCountryNames(155, 3) = "Sudán del Sur"
+    arrCountryNames(156, 3) = "Santo Tomé y Príncipe"
+    arrCountryNames(157, 3) = "Suriname"
+    arrCountryNames(158, 3) = "República Eslovaca"
+    arrCountryNames(159, 3) = "Eslovenia"
+    arrCountryNames(160, 3) = "Suecia"
+    arrCountryNames(161, 3) = "Eswatini"
+    arrCountryNames(162, 3) = "Seychelles"
+    arrCountryNames(163, 3) = "República Árabe Siria"
+    arrCountryNames(164, 3) = "Chad"
+    arrCountryNames(165, 3) = "Togo"
+    arrCountryNames(166, 3) = "Tailandia"
+    arrCountryNames(167, 3) = "Tayikistán"
+    arrCountryNames(168, 3) = "Turkmenistán"
+    arrCountryNames(169, 3) = "Timor-Leste"
+    arrCountryNames(170, 3) = "Tonga"
+    arrCountryNames(171, 3) = "Territorio Aduanero Distinto de Taiwán, Penghu, Kinmen y Matsu"
+    arrCountryNames(172, 3) = "Trinidad y Tabago"
+    arrCountryNames(173, 3) = "Túnez"
+    arrCountryNames(174, 3) = "Türkiye" '"Türkiye"
+    arrCountryNames(175, 3) = "Tanzanía"
+    arrCountryNames(176, 3) = "Uganda"
+    arrCountryNames(177, 3) = "Ucrania"
+    arrCountryNames(178, 3) = "Uruguay"
+    arrCountryNames(179, 3) = "Estados Unidos"
+    arrCountryNames(180, 3) = "Uzbekistán"
+    arrCountryNames(181, 3) = "San Vicente y las Granadinas"
+    arrCountryNames(182, 3) = "República Bolivariana de Venezuela"
+    arrCountryNames(183, 3) = "Viet Nam"
+    arrCountryNames(184, 3) = "Vanuatu"
+    arrCountryNames(185, 3) = "Samoa"
+    arrCountryNames(186, 3) = "Santa Sede"
+    arrCountryNames(187, 3) = "Yemen"
+    arrCountryNames(188, 3) = "Sudáfrica"
+    arrCountryNames(189, 3) = "Zambia"
+    arrCountryNames(190, 3) = "Zimbabwe"
+    
+    'Format (row, column), column=1 ISO code
+    arrCountryNames(1, 4) = "AFG"
+    arrCountryNames(2, 4) = "AGO"
+    arrCountryNames(3, 4) = "ALB"
+    arrCountryNames(4, 4) = "AND"
+    arrCountryNames(5, 4) = "ARE"
+    arrCountryNames(6, 4) = "ARG"
+    arrCountryNames(7, 4) = "ARM"
+    arrCountryNames(8, 4) = "ATG"
+    arrCountryNames(9, 4) = "AUS"
+    arrCountryNames(10, 4) = "AUT"
+    arrCountryNames(11, 4) = "AZE"
+    arrCountryNames(12, 4) = "BDI"
+    arrCountryNames(13, 4) = "BEL"
+    arrCountryNames(14, 4) = "BEN"
+    arrCountryNames(15, 4) = "BFA"
+    arrCountryNames(16, 4) = "BGD"
+    arrCountryNames(17, 4) = "BGR"
+    arrCountryNames(18, 4) = "BHR"
+    arrCountryNames(19, 4) = "BHS"
+    arrCountryNames(20, 4) = "BIH"
+    arrCountryNames(21, 4) = "BLR"
+    arrCountryNames(22, 4) = "BLZ"
+    arrCountryNames(23, 4) = "BOL"
+    arrCountryNames(24, 4) = "BRA"
+    arrCountryNames(25, 4) = "BRB"
+    arrCountryNames(26, 4) = "BRN"
+    arrCountryNames(27, 4) = "BTN"
+    arrCountryNames(28, 4) = "BWA"
+    arrCountryNames(29, 4) = "CAF"
+    arrCountryNames(30, 4) = "CAN"
+    arrCountryNames(31, 4) = "CHE"
+    arrCountryNames(32, 4) = "CHL"
+    arrCountryNames(33, 4) = "CHN"
+    arrCountryNames(34, 4) = "CIV"
+    arrCountryNames(35, 4) = "CMR"
+    arrCountryNames(36, 4) = "COD"
+    arrCountryNames(37, 4) = "COG"
+    arrCountryNames(38, 4) = "COL"
+    arrCountryNames(39, 4) = "COM"
+    arrCountryNames(40, 4) = "CPV"
+    arrCountryNames(41, 4) = "CRI"
+    arrCountryNames(42, 4) = "CUB"
+    arrCountryNames(43, 4) = "CYP"
+    arrCountryNames(44, 4) = "CZE"
+    arrCountryNames(45, 4) = "DEU"
+    arrCountryNames(46, 4) = "DJI"
+    arrCountryNames(47, 4) = "DMA"
+    arrCountryNames(48, 4) = "DNK"
+    arrCountryNames(49, 4) = "DOM"
+    arrCountryNames(50, 4) = "DZA"
+    arrCountryNames(51, 4) = "ECU"
+    arrCountryNames(52, 4) = "EEC"
+    arrCountryNames(53, 4) = "EGY"
+    arrCountryNames(54, 4) = "ESP"
+    arrCountryNames(55, 4) = "EST"
+    arrCountryNames(56, 4) = "ETH"
+    arrCountryNames(57, 4) = "EU"
+    arrCountryNames(58, 4) = "FIN"
+    arrCountryNames(59, 4) = "FJI"
+    arrCountryNames(60, 4) = "FRA"
+    arrCountryNames(61, 4) = "GAB"
+    arrCountryNames(62, 4) = "GBR"
+    arrCountryNames(63, 4) = "GEO"
+    arrCountryNames(64, 4) = "GHA"
+    arrCountryNames(65, 4) = "GIN"
+    arrCountryNames(66, 4) = "GMB"
+    arrCountryNames(67, 4) = "GNB"
+    arrCountryNames(68, 4) = "GNQ"
+    arrCountryNames(69, 4) = "GRC"
+    arrCountryNames(70, 4) = "GRD"
+    arrCountryNames(71, 4) = "GTM"
+    arrCountryNames(72, 4) = "GUY"
+    arrCountryNames(73, 4) = "HKG"
+    arrCountryNames(74, 4) = "HND"
+    arrCountryNames(75, 4) = "HRV"
+    arrCountryNames(76, 4) = "HTI"
+    arrCountryNames(77, 4) = "HUN"
+    arrCountryNames(78, 4) = "IDN"
+    arrCountryNames(79, 4) = "IND"
+    arrCountryNames(80, 4) = "IRL"
+    arrCountryNames(81, 4) = "IRN"
+    arrCountryNames(82, 4) = "IRQ"
+    arrCountryNames(83, 4) = "ISL"
+    arrCountryNames(84, 4) = "ISR"
+    arrCountryNames(85, 4) = "ITA"
+    arrCountryNames(86, 4) = "JAM"
+    arrCountryNames(87, 4) = "JOR"
+    arrCountryNames(88, 4) = "JPN"
+    arrCountryNames(89, 4) = "KAZ"
+    arrCountryNames(90, 4) = "KEN"
+    arrCountryNames(91, 4) = "KGZ"
+    arrCountryNames(92, 4) = "KHM"
+    arrCountryNames(93, 4) = "KNA"
+    arrCountryNames(94, 4) = "KOR"
+    arrCountryNames(95, 4) = "KWT"
+    arrCountryNames(96, 4) = "LAO"
+    arrCountryNames(97, 4) = "LBN"
+    arrCountryNames(98, 4) = "LBR"
+    arrCountryNames(99, 4) = "LBY"
+    arrCountryNames(100, 4) = "LCA"
+    arrCountryNames(101, 4) = "LIE"
+    arrCountryNames(102, 4) = "LKA"
+    arrCountryNames(103, 4) = "LSO"
+    arrCountryNames(104, 4) = "LTU"
+    arrCountryNames(105, 4) = "LUX"
+    arrCountryNames(106, 4) = "LVA"
+    arrCountryNames(107, 4) = "MAC"
+    arrCountryNames(108, 4) = "MAR"
+    arrCountryNames(109, 4) = "MDA"
+    arrCountryNames(110, 4) = "MDG"
+    arrCountryNames(111, 4) = "MDV"
+    arrCountryNames(112, 4) = "MEX"
+    arrCountryNames(113, 4) = "MKD"
+    arrCountryNames(114, 4) = "MLI"
+    arrCountryNames(115, 4) = "MLT"
+    arrCountryNames(116, 4) = "MMR"
+    arrCountryNames(117, 4) = "MNE"
+    arrCountryNames(118, 4) = "MNG"
+    arrCountryNames(119, 4) = "MOZ"
+    arrCountryNames(120, 4) = "MRT"
+    arrCountryNames(121, 4) = "MUS"
+    arrCountryNames(122, 4) = "MWI"
+    arrCountryNames(123, 4) = "MYS"
+    arrCountryNames(124, 4) = "NAM"
+    arrCountryNames(125, 4) = "NER"
+    arrCountryNames(126, 4) = "NGA"
+    arrCountryNames(127, 4) = "NIC"
+    arrCountryNames(128, 4) = "NLD"
+    arrCountryNames(129, 4) = "NOR"
+    arrCountryNames(130, 4) = "NPL"
+    arrCountryNames(131, 4) = "NZL"
+    arrCountryNames(132, 4) = "OMN"
+    arrCountryNames(133, 4) = "PAK"
+    arrCountryNames(134, 4) = "PAN"
+    arrCountryNames(135, 4) = "PER"
+    arrCountryNames(136, 4) = "PHL"
+    arrCountryNames(137, 4) = "PNG"
+    arrCountryNames(138, 4) = "POL"
+    arrCountryNames(139, 4) = "PRT"
+    arrCountryNames(140, 4) = "PRY"
+    arrCountryNames(141, 4) = "QAT"
+    arrCountryNames(142, 4) = "ROU"
+    arrCountryNames(143, 4) = "RUS"
+    arrCountryNames(144, 4) = "RWA"
+    arrCountryNames(145, 4) = "SAU"
+    arrCountryNames(146, 4) = "SCG"
+    arrCountryNames(147, 4) = "SDN"
+    arrCountryNames(148, 4) = "SEN"
+    arrCountryNames(149, 4) = "SGP"
+    arrCountryNames(150, 4) = "SLB"
+    arrCountryNames(151, 4) = "SLE"
+    arrCountryNames(152, 4) = "SLV"
+    arrCountryNames(153, 4) = "SOM"
+    arrCountryNames(154, 4) = "SRB"
+    arrCountryNames(155, 4) = "SSDN"
+    arrCountryNames(156, 4) = "STP"
+    arrCountryNames(157, 4) = "SUR"
+    arrCountryNames(158, 4) = "SVK"
+    arrCountryNames(159, 4) = "SVN"
+    arrCountryNames(160, 4) = "SWE"
+    arrCountryNames(161, 4) = "SWZ"
+    arrCountryNames(162, 4) = "SYC"
+    arrCountryNames(163, 4) = "SYR"
+    arrCountryNames(164, 4) = "TCD"
+    arrCountryNames(165, 4) = "TGO"
+    arrCountryNames(166, 4) = "THA"
+    arrCountryNames(167, 4) = "TJK"
+    arrCountryNames(168, 4) = "TKM"
+    arrCountryNames(169, 4) = "TLS"
+    arrCountryNames(170, 4) = "TON"
+    arrCountryNames(171, 4) = "TPKM"
+    arrCountryNames(172, 4) = "TTO"
+    arrCountryNames(173, 4) = "TUN"
+    arrCountryNames(174, 4) = "TUR"
+    arrCountryNames(175, 4) = "TZA"
+    arrCountryNames(176, 4) = "UGA"
+    arrCountryNames(177, 4) = "UKR"
+    arrCountryNames(178, 4) = "URY"
+    arrCountryNames(179, 4) = "USA"
+    arrCountryNames(180, 4) = "UZB"
+    arrCountryNames(181, 4) = "VCT"
+    arrCountryNames(182, 4) = "VEN"
+    arrCountryNames(183, 4) = "VNM"
+    arrCountryNames(184, 4) = "VUT"
+    arrCountryNames(185, 4) = "WSM"
+    arrCountryNames(186, 4) = "XXX"
+    arrCountryNames(187, 4) = "YEM"
+    arrCountryNames(188, 4) = "ZAF"
+    arrCountryNames(189, 4) = "ZMB"
+    arrCountryNames(190, 4) = "ZWE"
+    
+    'Format (row, column), column=5 Names as they appear in DOL Backend
+    arrCountryNames(1, 5) = "Afghanistan"
+    arrCountryNames(2, 5) = "Angola"
+    arrCountryNames(3, 5) = "Albania"
+    arrCountryNames(4, 5) = "Andorra"
+    arrCountryNames(5, 5) = "United Arab Emirates"
+    arrCountryNames(6, 5) = "Argentina"
+    arrCountryNames(7, 5) = "Armenia"
+    arrCountryNames(8, 5) = "Antigua and Barbuda"
+    arrCountryNames(9, 5) = "Australia"
+    arrCountryNames(10, 5) = "Austria"
+    arrCountryNames(11, 5) = "Azerbaijan"
+    arrCountryNames(12, 5) = "Burundi"
+    arrCountryNames(13, 5) = "Belgium"
+    arrCountryNames(14, 5) = "Benin"
+    arrCountryNames(15, 5) = "Burkina Faso"
+    arrCountryNames(16, 5) = "Bangladesh"
+    arrCountryNames(17, 5) = "Bulgaria"
+    arrCountryNames(18, 5) = "Bahrain, Kingdom of"
+    arrCountryNames(19, 5) = "Bahamas"
+    arrCountryNames(20, 5) = "Bosnia and Herzegovina"
+    arrCountryNames(21, 5) = "Belarus"
+    arrCountryNames(22, 5) = "Belize"
+    arrCountryNames(23, 5) = "Bolivia, Plurinational State of"
+    arrCountryNames(24, 5) = "Brazil"
+    arrCountryNames(25, 5) = "Barbados"
+    arrCountryNames(26, 5) = "Brunei Darussalam"
+    arrCountryNames(27, 5) = "Bhutan"
+    arrCountryNames(28, 5) = "Botswana"
+    arrCountryNames(29, 5) = "Central African Republic"
+    arrCountryNames(30, 5) = "Canada"
+    arrCountryNames(31, 5) = "Switzerland"
+    arrCountryNames(32, 5) = "Chile"
+    arrCountryNames(33, 5) = "China"
+    arrCountryNames(34, 5) = "Côte d'Ivoire"
+    arrCountryNames(35, 5) = "Cameroon"
+    arrCountryNames(36, 5) = "Democratic Republic of the Congo"
+    arrCountryNames(37, 5) = "Congo" 'Exception check for #Democratic Republic of the Congo
+    arrCountryNames(38, 5) = "Colombia"
+    arrCountryNames(39, 5) = "Comoros"
+    arrCountryNames(40, 5) = "Cabo Verde"
+    arrCountryNames(41, 5) = "Costa Rica"
+    arrCountryNames(42, 5) = "Cuba"
+    arrCountryNames(43, 5) = "Cyprus"
+    arrCountryNames(44, 5) = "Czech Republic"
+    arrCountryNames(45, 5) = "Germany"
+    arrCountryNames(46, 5) = "Djibouti"
+    arrCountryNames(47, 5) = "Dominica"
+    arrCountryNames(48, 5) = "Denmark"
+    arrCountryNames(49, 5) = "Dominican Republic"
+    arrCountryNames(50, 5) = "Algeria"
+    arrCountryNames(51, 5) = "Ecuador"
+    arrCountryNames(52, 5) = "formerly European Communities"
+     arrCountryNames(53, 5) = "Egypt"
+    arrCountryNames(54, 5) = "Spain"
+    arrCountryNames(55, 5) = "Estonia"
+    arrCountryNames(56, 5) = "Ethiopia"
+    arrCountryNames(57, 5) = "European Union"
+    arrCountryNames(58, 5) = "Finland"
+    arrCountryNames(59, 5) = "Fiji"
+    arrCountryNames(60, 5) = "France"
+    arrCountryNames(61, 5) = "Gabon"
+    arrCountryNames(62, 5) = "United Kingdom"
+    arrCountryNames(63, 5) = "Georgia"
+    arrCountryNames(64, 5) = "Ghana"
+    arrCountryNames(65, 5) = "Guinea"
+    arrCountryNames(66, 5) = "The Gambia"
+    arrCountryNames(67, 5) = "Guinea-Bissau"
+    arrCountryNames(68, 5) = "Equatorial Guinea"
+    arrCountryNames(69, 5) = "Greece"
+    arrCountryNames(70, 5) = "Grenada"
+    arrCountryNames(71, 5) = "Guatemala"
+    arrCountryNames(72, 5) = "Guyana"
+    arrCountryNames(73, 5) = "Hong Kong, China"
+    arrCountryNames(74, 5) = "Honduras"
+    arrCountryNames(75, 5) = "Croatia"
+    arrCountryNames(76, 5) = "Haiti"
+    arrCountryNames(77, 5) = "Hungary"
+    arrCountryNames(78, 5) = "Indonesia"
+    arrCountryNames(79, 5) = "India"
+    arrCountryNames(80, 5) = "Ireland"
+    arrCountryNames(81, 5) = "Iran"
+    arrCountryNames(82, 5) = "Iraq"
+    arrCountryNames(83, 5) = "Iceland"
+    arrCountryNames(84, 5) = "Israel"
+    arrCountryNames(85, 5) = "Italy"
+    arrCountryNames(86, 5) = "Jamaica"
+    arrCountryNames(87, 5) = "Jordan"
+    arrCountryNames(88, 5) = "Japan#Japan Electronics"
+    arrCountryNames(89, 5) = "Kazakhstan"
+    arrCountryNames(90, 5) = "Kenya"
+    arrCountryNames(91, 5) = "Kyrgyz Republic"
+    arrCountryNames(92, 5) = "Cambodia"
+    arrCountryNames(93, 5) = "Saint Kitts and Nevis"
+    arrCountryNames(94, 5) = "Korea, Republic of"
+    arrCountryNames(95, 5) = "The State of Kuwait"
+    arrCountryNames(96, 5) = "Lao People's Democratic Republic"
+    arrCountryNames(97, 5) = "Lebanon"
+    arrCountryNames(98, 5) = "Liberia"
+    arrCountryNames(99, 5) = "Libya"
+    arrCountryNames(100, 5) = "Saint Lucia"
+    arrCountryNames(101, 5) = "Liechtenstein"
+    arrCountryNames(102, 5) = "Sri Lanka"
+    arrCountryNames(103, 5) = "Lesotho"
+    arrCountryNames(104, 5) = "Lithuania"
+    arrCountryNames(105, 5) = "Luxembourg"
+    arrCountryNames(106, 5) = "Latvia"
+    arrCountryNames(107, 5) = "Macao, China"
+    arrCountryNames(108, 5) = "Morocco"
+    arrCountryNames(109, 5) = "Moldova, Republic of"
+    arrCountryNames(110, 5) = "Madagascar"
+    arrCountryNames(111, 5) = "Maldives"
+    arrCountryNames(112, 5) = "Mexico"
+    arrCountryNames(113, 5) = "North Macedonia"
+    arrCountryNames(114, 5) = "Mali"
+    arrCountryNames(115, 5) = "Malta"
+    arrCountryNames(116, 5) = "Myanmar"
+    arrCountryNames(117, 5) = "Montenegro"
+    arrCountryNames(118, 5) = "Mongolia"
+    arrCountryNames(119, 5) = "Mozambique"
+    arrCountryNames(120, 5) = "Mauritania"
+    arrCountryNames(121, 5) = "Mauritius"
+    arrCountryNames(122, 5) = "Malawi"
+    arrCountryNames(123, 5) = "Malaysia"
+    arrCountryNames(124, 5) = "Namibia"
+    arrCountryNames(125, 5) = "Niger"
+    arrCountryNames(126, 5) = "Nigeria"
+    arrCountryNames(127, 5) = "Nicaragua"
+    arrCountryNames(128, 5) = "Netherlands"
+    arrCountryNames(129, 5) = "Norway"
+    arrCountryNames(130, 5) = "Nepal"
+    arrCountryNames(131, 5) = "New Zealand"
+    arrCountryNames(132, 5) = "Oman"  ' Exception check for Romania
+    arrCountryNames(133, 5) = "Pakistan"
+    arrCountryNames(134, 5) = "Panama"
+    arrCountryNames(135, 5) = "Peru"
+    arrCountryNames(136, 5) = "Philippines"
+    arrCountryNames(137, 5) = "Papua New Guinea"
+    arrCountryNames(138, 5) = "Poland"
+    arrCountryNames(139, 5) = "Portugal"
+    arrCountryNames(140, 5) = "Paraguay"
+    arrCountryNames(141, 5) = "Qatar"
+    arrCountryNames(142, 5) = "Romania"
+    arrCountryNames(143, 5) = "Russian Federation"
+    arrCountryNames(144, 5) = "Rwanda"
+    arrCountryNames(145, 5) = "Kingdom of Saudi Arabia"
+    arrCountryNames(146, 5) = "Serbia and Montenegro"
+    arrCountryNames(147, 5) = "Sudan"
+    arrCountryNames(148, 5) = "Senegal"
+    arrCountryNames(149, 5) = "Singapore"
+    arrCountryNames(150, 5) = "Solomon Islands"
+    arrCountryNames(151, 5) = "Sierra Leone"
+    arrCountryNames(152, 5) = "El Salvador"
+    arrCountryNames(153, 5) = "Somalia"
+    arrCountryNames(154, 5) = "Serbia"
+    arrCountryNames(155, 5) = "South Sudan"
+    arrCountryNames(156, 5) = "Sao Tome and Principe"
+    arrCountryNames(157, 5) = "Suriname"
+    arrCountryNames(158, 5) = "Slovak Republic"
+    arrCountryNames(159, 5) = "Slovenia"
+    arrCountryNames(160, 5) = "Sweden"
+    arrCountryNames(161, 5) = "Eswatini"
+    arrCountryNames(162, 5) = "Seychelles"
+    arrCountryNames(163, 5) = "Syrian Arab Republic"
+    arrCountryNames(164, 5) = "Chad"
+    arrCountryNames(165, 5) = "Togo"
+    arrCountryNames(166, 5) = "Thailand"
+    arrCountryNames(167, 5) = "Tajikistan"
+    arrCountryNames(168, 5) = "Turkmenistan"
+    arrCountryNames(169, 5) = "Timor-Leste"
+    arrCountryNames(170, 5) = "Tonga"
+    arrCountryNames(171, 5) = "Chinese Taipei"
+    arrCountryNames(172, 5) = "Trinidad and Tobago"
+    arrCountryNames(173, 5) = "Tunisia"
+    arrCountryNames(174, 5) = "Türkiye" ' "Türkiye"
+    arrCountryNames(175, 5) = "Tanzania"
+    arrCountryNames(176, 5) = "Uganda"
+    arrCountryNames(177, 5) = "Ukraine"
+    arrCountryNames(178, 5) = "Uruguay"
+    arrCountryNames(179, 5) = "United States of America"
+    arrCountryNames(180, 5) = "Uzbekistan"
+    arrCountryNames(181, 5) = "Saint Vincent & the Grenadines"
+    arrCountryNames(182, 5) = "Venezuela, Bolivarian Republic of"
+    arrCountryNames(183, 5) = "Viet Nam"
+    arrCountryNames(184, 5) = "Vanuatu"
+    arrCountryNames(185, 5) = "Samoa"
+    arrCountryNames(186, 5) = "Holy see"
+    arrCountryNames(187, 5) = "Yemen"
+    arrCountryNames(188, 5) = "South Africa"
+    arrCountryNames(189, 5) = "Zambia"
+    arrCountryNames(190, 5) = "Zimbabwe"
+End Sub
+
+'Article Check Macro
+'
+
+Public Sub DOL_MACRO_FindArticles()
+
+  Dim strPattern As String
+
+  txtMatchesFound = ""
+  'Pattern 25 Sep 2023
+  'strPattern = "((Annex|Article)(.{0,100}?)((Understanding on Rules and Procedures Governing the Settlement of Disputes|DSU|GATT 1994|General Agreement on Tariffs and Trade 1994|GATS|Agreement on Safeguards|Agreement on Subsidies and Countervailing Measures|TBT|Agreement on Technical Barriers to Trade|Agreement on Agriculture|ARO|Agreement on Rules of Origin|Agreement on Trade-Related Investment Measures|Agreement on Trade-Related Aspects of Intellectual Property Rights|Agreement on Trade Facilitation|Agreement on Government Procurement|Agreement on Trade in Services|Agreement on Import Licensing Procedures|Agreement on the Application of Sanitary and Phytosanitary Measures|Agreement on Preshipment Inspection|Agreement on Implementation of Article VII of the General Agreement on Tariffs and Trade 1994|Agreement on Implementation of Article VI of the General Agreement on Tariffs and Trade 1994)|(?:Agreement)))"
+  'Call DOL_MACRO_FindArticles_Process(strPattern, True, True)
+
+    Selection.WholeStory
+    Selection.WholeStory
+    Selection.Range.HighlightColorIndex = wdAuto
+
+  'Pattern 1 - Starts with Article and Ends with Agreement - 90%
+  strPattern = ""
+  strPattern = strPattern & "((Article|(\s)Art|Annex|Appendix|paragraph)([^\r\n\/]{0,100}?)(Understanding on Rules and Procedures Governing the Settlement of Disputes|(\s)DSU|GATT 1994|General Agreement on Tariffs and Trade 1994|(\s)GATS|Agreement on Safeguards|Agreement on Subsidies and Countervailing Measures|(\s)TBT|Agreement on Technical Barriers to Trade|(\s)GPA|(\s)TRIPS|(\s)SGA|Agreement on Implementation of Article VII of the General Agreement on Tariffs and Trade 1994|Agreement on Implementation of Article VI of the General Agreement on Tariffs and Trade 1994|General Agreement on Tariffs and Trade 1947|GATT 1947|"
+  strPattern = strPattern & "Agreement on Agriculture|(\s)ARO[^a-z]|Agreement on Rules of Origin|Agreement on Trade-Related Investment Measures|Agreement on Trade-Related Aspects of Intellectual Property Rights|Agreement on Trade Facilitation|Agreement on Government Procurement|Agreement on Trade in Services|Agreement on Import Licensing Procedures|Agreement on the Application of Sanitary and Phytosanitary Measures|Agreement on Textiles and Clothing|Agreement on Fisheries Subsidies|Agreement on Trade in Civil Aircraft|Enabling Clause|Agreement on Customs Valuation|(\s)CVA|(\s)ATC|(\s)AFS|(\s)FSA|(\s)ASCM|"
+  strPattern = strPattern & "Agreement on Preshipment Inspection|Agreement on the Implementation of Article VII of the GATT 1994|Agreement on the Implementation of Article VI of the GATT 1994|(\s)TFA|(\s)AOA|Agreement))"
+  Call DOL_MACRO_FindArticles_Process(strPattern, True, True, wdYellow)
+
+'((Annex)((([^.\n]{0,10}[XVI]+)(X{0,3})(I[XV]|V?I{0,3})(:*\(*\d.?\d*))|(([^.\n]{0,10}[XVI]+)(X{0,3})(I[XV]|V?I{0,3})))?)
+
+  'Pattern 2 - Starts with Agreement and ends with Article - 5%
+  strPattern = "((\s)DSU(\s)|(\s)SCM(\s)|(\s)TRIPS(\s)|(\s)TRIMS(\s)|(\s)TBT(\s)|(\s)SPS(\s)|(\s)CVA(\s)|(\s)AOA(\s)|(\s)ARO(\s)|(\s)SGA(\s)|(\s)GPA(\s)|(\s)ATC(\s)|(\s)AFS(\s))([^.\n\/]{0,10}?)((((\([^)]\))*.{0,20}(and)*((\s),*)(\([^)]\)))|.{0,20}(\([^)]\)))|(((\d+(.?(and|.and)?)\s{0,1})+\d+)|(\d.?\d*)))"
+  Call DOL_MACRO_FindArticles_Process(strPattern, True, True, wdBlue)
+  
+  'Pattern 3 - Starts with Agreement (GATS or GATT) and ends with Article - 5%
+  strPattern = "(GATT Article|GATT Art|GATS Article|GATS Art)([^\r\n\/]{0,10}?)((([and, XVI]+)(X{0,3})(I[XV]|V?I{0,3})(:*\(*\d.?\d*))|(([and, XVI]+)(X{0,3})(I[XV]|V?I{0,3})))"
+  Call DOL_MACRO_FindArticles_Process(strPattern, True, True, wdGreen)
+
+'(GATT Art|GATS Art)([^\r\n\/]{0,5}?)((([^.\n]*[XVI]+)(X{0,3})(I[XV]|V?I{0,3})(:*\(*\d.?\d*))|(([^.\n]*[XVI]+)(X{0,3})(I[XV]|V?I{0,3})))
+
+  'Pattern 4 - Unique Articles/Agreements
+  strPattern = ""
+  strPattern = strPattern & "(Enabling Clause Understanding on the Interpretation of Article II.1 (B)|Understanding on the Interpretation of Article XVII|Understanding on the Interpretation of Article XXIV|Understanding on the Interpretation of Article XXVIII|Understanding on the Balance-of-Payments Provision|Understanding in Respect of Waivers of Obligations|Decision on the Valuation of Carrier Media Bearing Software|Decision on the Treatment of Interest Charges|Decision on Measures Concerning the Possible Negative Effects of the Reform Programme|"
+  strPattern = strPattern & "Decision on Notification Procedures for Quantitative Restrictions|Decision on Preferential Rules of Origin|Decision on the Operationalization of the Waiver Concerning Preferential Treatment to Services|GATS Annex on Air Transport Services|GATS Annex on Telecommunications|GATS Annex on Financial Services|GATS Annex on Movement of Natural Persons|Protocol (2001) Amending the Annex to the Agreement on Trade in Civil Aircraft|Preamble to the GATS)"
+  Call DOL_MACRO_FindArticles_Process(strPattern, True, True, wdPink)
+
+'  'Pattern 5  - For articles separated from the agreement name
+'   strPattern = " (Article|Annex)(.{0,100}?)((((\([^)]\))*.*(and)*((\s),*)(\([^)]\)))|.*(\([^)]\)))|(((\d+(.?(and|.and)?)\s{0,1})+\d+)|(\d.?\d*)))"
+'  Call DOL_MACRO_FindArticles_Process(strPattern, True, True, wdGreen)
+
+ 'If vblnCopyArticlesToClipboard = True Then
+  
+    SetClipboard (txtMatchesFound)
+  
+ ' End If
+End Sub
+Sub AddReference()
+    Dim VBAEditor As Object 'VBIDE.VBE
+    Dim vbProj As Object 'VBIDE.VBProject
+    Dim chkRef As Object ' VBIDE.Reference
+    Dim BoolExists As Boolean
+
+    Set VBAEditor = Application.VBE
+    Set vbProj = ActiveDocument.VBProject
+
+    '~~> Check if "Microsoft VBScript Regular Expressions 5.5" is already added
+    For Each chkRef In vbProj.References
+        If chkRef.Name = "VBScript_RegExp_55" Then
+            BoolExists = True
+            GoTo CleanUp
+        End If
+    Next
+
+    vbProj.References.AddFromFile "C:\WINDOWS\system32\vbscript.dll\3"
+
+CleanUp:
+    If BoolExists = True Then
+        'MsgBox "Reference already exists"
+    Else
+       ' MsgBox "Reference Added Successfully"
+    End If
+
+    Set vbProj = Nothing
+    Set VBAEditor = Nothing
+End Sub
+
+Private Sub DOL_MACRO_FindArticles_Process(ByVal vstrPattern As String, ByVal vblnHighlight As Boolean, ByVal vblnCopyArticlesToClipboard As Boolean, ByVal vHighlightColor As WdColorIndex)
+
+Dim objRegExp As Object 'regExp
+Dim ObjMatch As Object 'Match
+Dim colMatches As Object 'MatchCollection
+Dim sFindText As String
+Dim strWholeText As String
+Dim strPartText As String
+
+
+Set objRegExp = CreateObject("VBScript.RegExp") 'New regExp
+objRegExp.Pattern = vstrPattern
+objRegExp.IgnoreCase = True
+objRegExp.Global = True
+
+Selection.WholeStory
+Dim str As String
+strWholeText = Selection.text
+Selection.WholeStory
+'Selection.Range.HighlightColorIndex = wdAuto
+Dim Result As String
+
+
+ 
+ Do While strWholeText <> ""
+ 
+     strPartText = Left(strWholeText, 500)
+     strWholeText = Mid(strWholeText, 401)
+     
+     strPartText = Replace(strPartText, ChrW(160), Chr(32))
+   
+     If (objRegExp.Test(strPartText) = True) Then
+       
+       
+       Set colMatches = objRegExp.Execute(strPartText) 'Execute Search
+       
+       For Each ObjMatch In colMatches  'Iterate matches collection
+                
+          'Highlight text in the document
+            Selection.HomeKey wdStory
+            sFindText = ObjMatch.Value
+            sFindText = Replace(sFindText, vbNewLine, "")
+            sFindText = Replace(sFindText, Chr(12), "")
+            sFindText = Replace(sFindText, Chr(10), "")
+            sFindText = Replace(sFindText, Chr(13), "")
+            
+            Selection.Find.Execute Left(sFindText, 100)
+            Do Until Selection.Find.Found = False
+              Selection.Range.HighlightColorIndex = vHighlightColor
+              Selection.MoveRight
+              Selection.Find.Execute
+            Loop
+          If InStr(LCase(txtMatchesFound), LCase(ObjMatch.Value)) <= 0 Then
+            txtMatchesFound = txtMatchesFound & ObjMatch.Value & vbNewLine
+          End If
+       Next
+      Else
+    
+      End If
+  Loop
+ 
+End Sub
+
+
+
+
+Public Sub ShowCataloguer()
+  UserForm1.Show (False)
+  
+End Sub
+Public Function Prefil()
+
+Dim strSymbol As String
+Dim strParentSymbol As String
+  
+  '1. Get the record based on symbol, if multiple symbols then take one of them
+  strSymbol = fnGetSymbolFromDocument()
+  strSymbol = UCase(strSymbol)
+  
+    If Not (strSymbol Like "*/SPS/*ADD*" And strSymbol Like "*/SPS/*ADD*") Then
+      Exit Sub
+    End If
+    
+  
+  If strSymbol Like "*#*" Then
+    strSymbol = Split(strSymbol, "#")(1)
+  End If
+
+  '2. Get Parent symbol, some times it may have multiple levels, how to get root parent
+  strParentSymbol = Left(strSymbol, InStr(strSymbol, "/ADD"))
+
+  '3. Get Data from Parent
+  
+  
+  '4. Upadate Addendum
+  
+  '4.1 Title in the language + Parent
+  
+  '4.2 Product
+  
+  '4.3 Subject
+  
+  
+  
+End Function
+
+
+
+'H\.?S[.\s-]CODE[:\s]+\K[\d.]+
+Private Function Extract_ReportingPeriod(ByVal vstrString As String, ByVal strPattern As String) As String
+
+Dim regex As Object
+Dim i As Long
+Dim AllMatches As Object
+Dim strReportingPeriod As String
+
+
+    
+    Set regex = CreateObject("VBScript.RegExp")
+    regex.IgnoreCase = True
+    regex.Global = True
+    regex.Pattern = strPattern
+    Set AllMatches = regex.Execute(vstrString)
+    
+    If AllMatches.Count > 0 Then
+        strReportingPeriod = Trim(AllMatches.Item(0).submatches(0))
+    Else
+       strReportingPeriod = ""
+    End If
+    
+    Extract_ReportingPeriod = strReportingPeriod
+
+End Function
+
+
+Function Extract_HS(ByVal vstrString As String) As String
+
+Dim regex As Object
+Dim i As Long
+Dim AllMatches As Object
+Dim strHs As String
+
+    Set regex = CreateObject("VBScript.RegExp")
+    regex.IgnoreCase = True
+    regex.Global = True
+    regex.Pattern = "\d+(\.|[ ])\d*" '"\d+\.\d+"  'All digits consecutive with a . in between are extracted. Ex 23.768, 02.30, 765.3
+    Set AllMatches = regex.Execute(vstrString)
+    
+    strHs = ""
+
+    For i = 1 To AllMatches.Count
+       
+        If strHs <> "" Then
+           strHs = strHs & " ; "
+        End If
+        strHs = strHs & Replace(AllMatches.Item(i - 1).Value, ".", "")
+        
+    Next i
+    
+    Extract_HS = strHs
+
+End Function
+
+
+Public Sub Extract_HS_From_SelectedText()
+Dim strText As String
+
+ 
+    strText = Selection.Range.text
+    
+    strText = Extract_HS(strText)
+    
+    SetClipboard (strText)
+    
+End Sub
+
+Sub DOL_Macro_GetContent()
+'
+' Macro1 Macro
+'
+'
+Dim strSymbol As String
+Dim strContentsFinal As String
+    
+    strSymbol = ""
+    Call fnCreateCountryList
+
+    Selection.HomeKey Unit:=wdStory
+    
+    'First get the symbol
+       
+    strSymbol = fnGetSymbolFromDocument()
+  
+
+    strContentsFinal = ""
+    
+    
+    'Get the Contents for G/SPS/N documents
+    If strSymbol Like "G/SPS/N/*" Then
+      strContentsFinal = Content_G_SPS_N()
+    ElseIf strSymbol Like "G/TBT/N/*" Then
+       strContentsFinal = Content_G_TBT_N()
+    ElseIf strSymbol Like "IP/N/1/*" Then
+       strContentsFinal = Content_IP_N_1()
+    ElseIf strSymbol Like "WT/COMTD/RTA*/N/*" Then
+       strContentsFinal = Content_WT_COMTD_N()
+    ElseIf strSymbol Like "G/AG/N/*" Then
+       strContentsFinal = Content_G_AG_N()
+    ElseIf strSymbol Like "WT/TPR/G/*" Then
+       strContentsFinal = Content_WT_TPR_G()
+    ElseIf strSymbol Like "G/LIC/N/2/*" Then
+       strContentsFinal = Content_G_LIC_N_2()
+    ElseIf strSymbol Like "G/LIC/N/3/*" Then
+       strContentsFinal = Content_G_LIC_N_3()
+    ElseIf strSymbol Like "G/LIC/Q/*" Then
+       strContentsFinal = Content_G_LIC_Q()
+    ElseIf strSymbol Like "G/ADP/N/*" Or _
+           strSymbol Like "G/SCM/N/*" Then
+       strContentsFinal = Content_G_ADP_SCM_N()
+    ElseIf strSymbol Like "WT/DAILYB*" Then
+        strContentsFinal = Content_WT_DAILYB()
+    ElseIf strSymbol Like "INF/SDR/*" Or _
+           strSymbol Like "TN/AG/*" Or _
+           strSymbol Like "RD/GPA*" Or _
+           strSymbol Like "WT/L*" Or _
+           strSymbol Like "JOB/ACC*" Or _
+           strSymbol Like "INF/ECOM*" Or _
+           strSymbol Like "G/SG/N/*" Or _
+           strSymbol Like "G/SPS/GEN*" Or _
+           strSymbol Like "G/TFA/N*" Or _
+           strSymbol Like "WT/L*" Or _
+           strSymbol Like "G/VAL/W*" Or _
+           strSymbol Like "INF/MSME*" Or _
+           strSymbol Like "INF/SDR*" Then
+       strContentsFinal = Extract_First_Para()
+    
+    Else
+       MsgBox "Content extraction macro not yet defined for this document", vbOKOnly, "DOL Cataloguer macro"
+    End If
+
+    SetClipboard (strContentsFinal)
+    
+On Error GoTo ResetWindow
+    ActiveWindow.ActivePane.View = wdPrintView
+    ActiveWindow.View = wdPrintView
+    ActiveDocument.StoryRanges(wdMainTextStory).Characters(1).Select
+    Selection.GoTo 3, 1
+    
+    Exit Sub
+ResetWindow:
+    On Error GoTo 0
+    ActiveDocument.StoryRanges(wdMainTextStory).Characters(1).Select
+    Selection.GoTo 3, 1
+    
+    ActiveWindow.ActivePane.View = wdPrintView
+    
+    ActiveWindow.View = wdPrintView
+End Sub
+Private Function fnGetTitle_General(ByVal vstrSymbol As String, ByVal vstrCommittee As String, ByVal vstrLanguage As String, ByRef rblnTrilingual As Boolean) As String
+    Dim lngPara As Long
+    Dim blnTitlePara As Boolean
+    Dim strTitle As String
+    Dim strPara As String
+    Dim strPreviousTitle As String
+    Dim lngLanguageCodeWord As String
+    Dim lngLanguageCodeDOL As String
+    Dim VarCurParaLanguage As Integer
+    Dim strParaPart As Variant
+    Dim strText As String
+    Dim strCountry As String
+    Dim strCountrynames As String
+    Dim lngLangCode123 As Long
+
+    fnGetTitle_General = ""
+    
+    
+    If vstrLanguage = "" Then
+        Select Case Trim(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(1).Range.words(1).LanguageID)
+          Case 2057, 1033, 3081, 10249, 4105, 9225, 14345, 6153, 8201, 5129, 13321, 7177, 11273, 2057, 12297
+            vstrLanguage = "English"
+            
+          Case 4108, 1036, 11276, 3084, 998, 12300, 15372, 5132, 13324, 6156, 114348, 8204, 10252, 7180
+            vstrLanguage = "French"
+            
+          Case 3082, 1034, 11274, 16394, 13322, 9226, 5130, 7178, 12298, 17418, 4106, 18442, 19466, 6154, 15370, 10250, 20490, 14346, 8202
+            vstrLanguage = "Spanish"
+          Case Else
+            vstrLanguage = "English"
+        End Select
+    End If
+    
+    Select Case vstrLanguage
+        Case "English"
+          lngLanguageCodeWord = Trim(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(1).Range.words(1).LanguageID)
+          lngLanguageCodeDOL = 1033
+          lngLangCode123 = 1
+        Case "French"
+          lngLanguageCodeWord = Trim(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(1).Range.words(1).LanguageID)
+          lngLanguageCodeDOL = 1036
+          lngLangCode123 = 2
+        Case "Spanish"
+          lngLanguageCodeWord = Trim(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(1).Range.words(1).LanguageID)
+          lngLanguageCodeDOL = 3082
+          lngLangCode123 = 3
+    End Select
+    'strCountrynames = fn_Get_CountryNameFromSymbol(vstrSymbol, lngLangCode123)
+
+    rblnTrilingual = False
+    Dim intCurrentPage As Integer
+   
+   
+    If vstrCommittee <> "" Then
+      strTitle = vstrCommittee & " - "
+    Else
+      strTitle = ""
+    End If
+    intCurrentPage = 1
+    lngPara = 1
+    
+    Do While (Trim(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.words(1).LanguageID) <> lngLanguageCodeWord _
+             And Trim(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.words(1).LanguageID) <> lngLanguageCodeDOL) _
+            Or (Not IsTitleFont(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Style.NameLocal)) _
+
+            
+     
+      intCurrentPage = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.Information(wdActiveEndAdjustedPageNumber)
+      'intCurrentPage = Selection.Information(wdActiveEndAdjustedPageNumber)
+      If intCurrentPage <> 1 Then
+        GoTo ExitStartLoop
+      End If
+      lngPara = lngPara + 1
+    Loop
+ExitStartLoop:
+
+    If intCurrentPage <> 1 _
+       Or Not (ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.words(1).LanguageID = lngLanguageCodeWord _
+       Or ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.words(1).LanguageID = lngLanguageCodeDOL) _
+       Or Not IsTitleFont(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Style.NameLocal) Then
+      Exit Function
+    End If
+    
+    Do While True
+    
+           
+        If IsTitleFont(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Style.NameLocal) Then
+
+            'ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.Select
+            'Selection.ClearFormatting
+            'Selection.Range.Text = LCase(Selection.Range.Text)
+            strPara = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.text
+            
+     
+
+
+            strPara = LCase(strPara)
+    
+            strPara = fnFormatTextRemoveSpecialChars(strPara, True, "")
+            
+            If InStr(strPara, " ") > 0 Then
+            
+                For Each strParaPart In Split(strPara, ":")
+                  Call fnReplaceFromPreviousTitle(strPara, Trim(strParaPart), lngLanguageCodeDOL)
+                Next
+            Else
+              Call fnReplaceFromPreviousTitle(strPara, strPara, lngLanguageCodeDOL)
+            End If
+            strPara = UCase(Left(strPara, 1)) & Mid(strPara, 2)
+            strPara = fnApply_Default_Spelling(strPara, lngLangCode123)
+            
+            'If strTitle <> "" And strPara <> "" Then
+            If strPara <> "" Then
+               If strTitle <> "" Then
+                If lngPara > 1 Then
+                  'If ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Style.NameLocal = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara - 1).Style.NameLocal Then
+                  '  strTitle = strTitle & " "
+                  'Else
+                     strTitle = strTitle & " - "
+                  'End If
+                End If
+               End If
+               If vstrSymbol Like "G/SPS/N/*" Or vstrSymbol Like "G/TBT/N/*" Then
+                  If ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Style.NameLocal Like "Title 3*" Then
+                                      
+                    strTitle = strTitle & "[Country]" & " - "
+                    
+                  End If
+                  
+                End If
+               strTitle = strTitle & strPara
+            End If
+
+        
+        End If
+                
+        lngPara = lngPara + 1
+        
+        
+        intCurrentPage = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.Information(wdActiveEndAdjustedPageNumber)
+        'intCurrentPage = Selection.Information(wdActiveEndAdjustedPageNumber)
+        
+        If intCurrentPage <> 1 Then
+          GoTo ExitSecondLoop
+        End If
+        
+        If Not IsTitleFont(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Style.NameLocal) Then
+           strText = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.text
+           strText = fnFormatTextRemoveSpecialChars(strText, False, "")
+           If strText <> "" Then
+             GoTo ExitSecondLoop
+           End If
+        End If
+        
+        VarCurParaLanguage = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.words(1).LanguageID
+        If lngLanguageCodeWord = 2057 Then
+        
+          If VarCurParaLanguage = 4108 _
+             Or VarCurParaLanguage = 1036 _
+             Or VarCurParaLanguage = 3082 Then
+             'Language changed, exit - trilingual document
+             rblnTrilingual = True
+             GoTo ExitSecondLoop
+          End If
+        End If
+        If lngLanguageCodeWord = 4108 Then
+        
+          If VarCurParaLanguage = 2057 _
+             Or VarCurParaLanguage = 1033 _
+             Or VarCurParaLanguage = 3082 Then
+             'Language changed, exit - trilingual document
+             rblnTrilingual = True
+             GoTo ExitSecondLoop
+          End If
+          
+        End If
+        If lngLanguageCodeWord = 3082 Then
+        
+          If VarCurParaLanguage = 2057 _
+            Or VarCurParaLanguage = 1033 _
+            Or VarCurParaLanguage = 4108 _
+            Or VarCurParaLanguage = 1036 Then
+             'Language changed, exit - trilingual document
+             rblnTrilingual = True
+             GoTo ExitSecondLoop
+          End If
+          
+        End If
+        
+    Loop
+ExitSecondLoop:
+
+    'SPS Notifications
+    If vstrSymbol Like "G/SPS/N/*" Or vstrSymbol Like "G/TBT/N/*" Then
+      
+       If InStr(strTitle, "[Country]") = 0 Then
+          strTitle = strTitle & " - " & "[Country]" & " - "
+       End If
+      
+       If ActiveDocument.StoryRanges(wdMainTextStory).Bookmarks.Exists("spsMember") Then
+         strCountry = ActiveDocument.StoryRanges(wdMainTextStory).Bookmarks("spsMember").Range.text
+         ' Call fnReplaceFromPreviousTitle(strCountry, strCountry, lngLanguageCodeDOL)
+          strCountry = fn_Get_CountryNameFromName(strCountry, lngLangCode123)
+       ElseIf ActiveDocument.StoryRanges(wdMainTextStory).Bookmarks.Exists("sps1a") Then
+          strCountry = ActiveDocument.StoryRanges(wdMainTextStory).Bookmarks("sps1a").Range.text
+          'Call fnReplaceFromPreviousTitle(strCountry, strCountry, lngLanguageCodeDOL)
+          strCountry = fn_Get_CountryNameFromName(strCountry, lngLangCode123)
+       ElseIf InStr(strTitle, "[Country]") > 0 Then
+          strCountry = fn_Get_CountryNameFromSymbol(vstrSymbol, lngLangCode123)
+       End If
+     
+'       strCountry = fn_Get_CountryNameFromName(strCountry, lngLangCode123)
+'       Call fnReplaceFromPreviousTitle(strCountry, strCountry, lngLanguageCodeDOL)
+                
+       If InStr(strTitle, "[Country]") > 0 Then
+          strTitle = Replace(strTitle, "[Country]", strCountry)
+       End If
+    
+    End If
+    fnGetTitle_General = strTitle
+
+End Function
+Private Function IsTitleFont(ByVal vstrTitleFont As String) As Boolean
+   If vstrTitleFont Like "Title*" Or vstrTitleFont Like "Titre*" Then
+      IsTitleFont = True
+   Else
+      IsTitleFont = False
+   End If
+
+End Function
+
+Private Function IsBodyTextFont(ByVal vstrTitleFont As String) As Boolean
+   If vstrTitleFont Like "Body Text*" Or vstrTitleFont Like "Note Text*" Then
+      IsBodyTextFont = True
+   Else
+      IsBodyTextFont = False
+   End If
+
+End Function
+
+Private Function fnGetTitle_General_TrilingualFrench() As String
+    Dim lngParaStart As Long
+    Dim lngParaEnd As Long
+    Dim lngPara As Long
+    Dim blnTitlePara As Boolean
+    Dim strTitle As String
+    Dim strPara As String
+    Dim strPreviousTitle As String
+    Dim lngLanguageCodeWord As String
+    Dim lngLanguageCodeDOL As String
+    Dim VarCurParaLanguage As Integer
+    Dim strParaPart As Variant
+    Dim strCommittee As String
+    Dim strText As String
+    Dim intCurrentPage As Integer
+    fnGetTitle_General_TrilingualFrench = ""
+    
+    
+    If ActiveDocument.StoryRanges(wdMainTextStory).Bookmarks.Exists("bmkCommitteeFR") = True Then
+        
+        strCommittee = ActiveDocument.StoryRanges(wdMainTextStory).Bookmarks("bmkCommitteeFR").Range.text
+        strCommittee = fnFormatTextRemoveSpecialChars(strCommittee, False, "-")
+               
+        If strCommittee <> "" Then
+          strTitle = strCommittee
+        Else
+          strTitle = ""
+        End If
+        
+        intCurrentPage = 1
+        Selection.GoTo What:=wdGoToBookmark, Name:="bmkCommitteeFR"
+        lngParaStart = ActiveDocument.Range(0, Selection.End).Paragraphs.Count '1
+        
+        Selection.GoTo What:=wdGoToBookmark, Name:="bmkCommitteeSP"
+        lngParaEnd = ActiveDocument.Range(0, Selection.End).Paragraphs.Count '1
+      
+    ElseIf mlngParaStartFrench <> 0 And mlngParaStartSpanish <> 0 Then
+       lngParaStart = mlngParaStartFrench
+       lngParaEnd = mlngParaStartSpanish - 1
+    Else
+       Exit Function
+    End If
+    
+    For lngPara = lngParaStart + 1 To lngParaEnd - 1
+    
+    
+        strPara = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.text
+        strPara = LCase(strPara)
+        strPara = fnFormatTextRemoveSpecialChars(strPara, True, "")
+        
+        
+        If strPara <> "" Then
+        
+            If ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.Characters(Len(strPara)).Font.Superscript = True Then
+              If Val(Right(strPara, 1)) > 0 And Val(Right(strPara, 1)) < 9 Then
+                 strPara = Left(strPara, Len(strPara) - 1)
+              End If
+              
+            End If
+    
+            If InStr(strPara, " ") > 0 Then
+            
+                For Each strParaPart In Split(strPara, ":")
+                  Call fnReplaceFromPreviousTitle(strPara, Trim(strParaPart), 1036)
+                Next
+            Else
+            
+              Call fnReplaceFromPreviousTitle(strPara, strPara, 1036)
+            End If
+            Call fnApply_Default_Spelling(strPara, 2)
+            'If strTitle <> "" And strPara <> "" Then
+            If strPara <> "" Then
+               If strTitle <> "" Then
+                If lngPara > 1 Then
+                  'If ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Style.NameLocal = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara - 1).Style.NameLocal Then
+                  '  strTitle = strTitle & " "
+                  'Else
+                   strTitle = strTitle & " - "
+                  'End If
+                End If
+               End If
+               strTitle = strTitle & strPara
+            End If
+        End If
+    Next lngPara
+    fnGetTitle_General_TrilingualFrench = strTitle
+
+End Function
+Private Function fnGetTitle_General_TrilingualSpanish() As String
+    Dim lngParaStart As Long
+    Dim lngParaEnd As Long
+    Dim lngPara As Long
+    Dim blnTitlePara As Boolean
+    Dim strTitle As String
+    Dim strPara As String
+    Dim strPreviousTitle As String
+    Dim lngLanguageCodeWord As String
+    Dim lngLanguageCodeDOL As String
+    Dim VarCurParaLanguage As Integer
+    Dim strParaPart As Variant
+    Dim strCommittee As String
+    Dim strText As String
+    Dim intCurrentPage As Integer
+    fnGetTitle_General_TrilingualSpanish = ""
+    
+    
+    If ActiveDocument.StoryRanges(wdMainTextStory).Bookmarks.Exists("bmkCommitteeSP") = True Then
+    
+        strCommittee = ActiveDocument.StoryRanges(wdMainTextStory).Bookmarks("bmkCommitteeSP").Range.text
+        strCommittee = fnFormatTextRemoveSpecialChars(strCommittee, False, "-")
+               
+        If strCommittee <> "" Then
+          strTitle = strCommittee
+        Else
+          strTitle = ""
+        End If
+        intCurrentPage = 1
+        Selection.GoTo What:=wdGoToBookmark, Name:="bmkCommitteeSP"
+        lngParaStart = ActiveDocument.Range(0, Selection.End).Paragraphs.Count '1
+        lngParaEnd = 50
+    ElseIf mlngParaStartFrench <> 0 And mlngParaStartSpanish <> 0 Then
+       lngParaStart = mlngParaStartSpanish - 1
+       lngParaEnd = 50 ' mlngParaStartSpanish - 1
+    Else
+       Exit Function
+    End If
+   
+    For lngPara = lngParaStart + 1 To lngParaEnd 'lngParaEnd - 1
+    
+        intCurrentPage = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.Information(wdActiveEndAdjustedPageNumber)
+        If intCurrentPage <> 1 Then
+          Exit For
+        End If
+        
+                
+        strPara = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.text
+        strPara = LCase(strPara)
+        strPara = fnFormatTextRemoveSpecialChars(strPara, True, "")
+        
+       ' If ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Style.NameLocal Like "Title*" Then
+
+            If strPara <> "" Then
+            
+                If ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.Characters(Len(strPara)).Font.Superscript = True Then
+                  If Val(Right(strPara, 1)) > 0 And Val(Right(strPara, 1)) < 9 Then
+                     strPara = Left(strPara, Len(strPara) - 1)
+                  End If
+                  
+                End If
+        
+                If InStr(strPara, " ") > 0 Then
+                
+                    For Each strParaPart In Split(strPara, ":")
+                      Call fnReplaceFromPreviousTitle(strPara, Trim(strParaPart), 3082)
+                    Next
+                Else
+                  Call fnReplaceFromPreviousTitle(strPara, strPara, 3082)
+            
+                End If
+                Call fnApply_Default_Spelling(strPara, 3)
+                'If strTitle <> "" And strPara <> "" Then
+                If strPara <> "" And Left(strPara, 1) <> "_" Then
+                   If strTitle <> "" Then
+                    If lngPara > 1 Then
+                      'If ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Style.NameLocal = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara - 1).Style.NameLocal Then
+                      '  strTitle = strTitle & " "
+                      'Else
+                         strTitle = strTitle & " - "
+                      'End If
+                    End If
+                   End If
+                   strTitle = strTitle & strPara
+                End If
+            End If
+        'End If
+    Next lngPara
+    fnGetTitle_General_TrilingualSpanish = strTitle
+
+End Function
+
+Public Sub Extract_H1()
+
+Dim p As Integer
+Dim intloop As Integer
+Dim doc As Document
+Dim currentRange As Range
+Dim sHeader(50) As String
+Dim strContent As String
+Dim vnword As Variant
+Dim strFirstPartOfHeader As String
+Dim strSecondPartOfHeader As String
+
+    Set doc = ActiveDocument
+    Set currentRange = doc.Range 'start with the whole doc as the current range
+    Call fnCreateCountryList
+    
+    With currentRange.Find
+        .Forward = True             'move forward only
+        .Style = wdStyleHeading1    'the type of style to find
+        .Execute                    'update currentRange to the first found instance
+    
+
+        p = 0
+        Do While .Found
+    
+            If Trim(currentRange.ListFormat.ListString) = "" Then
+              sHeader(p) = currentRange.text
+            Else
+              sHeader(p) = currentRange.ListFormat.ListString & " " & currentRange.text
+            End If
+    
+            ' update currentRange to next found instance
+            .Execute
+            p = p + 1
+        Loop
+    End With
+    
+    For intloop = LBound(sHeader) To UBound(sHeader)
+   
+       If Left(sHeader(intloop), 1) <> " " And sHeader(intloop) <> "" Then
+         If strContent <> "" Then
+         
+            strContent = strContent & " -- "
+            
+         End If
+'         For Each vnword In Split(sHeader(intloop), " ")
+'            If Len(vnword) > 1 Then
+'                If vnword = UCase(vnword) Then
+'                    vnword = Left(vnword, 1) & LCase(Mid(vnword, 2))
+'                    sHeader(intloop) = Replace(sHeader(intloop), vnword, vnword, , , vbTextCompare)
+'                End If
+'            End If
+'         Next
+         sHeader(intloop) = fnApply_Default_Spelling(sHeader(intloop), mfnGetLanguageCode123FromDoc)
+         sHeader(intloop) = fnFormatTextRemoveSpecialChars(sHeader(intloop), False, "")
+         sHeader(intloop) = LCase(sHeader(intloop))
+         strFirstPartOfHeader = UCase(Trim(fnFormatTextRemoveSpecialChars(Left(sHeader(intloop), InStr(sHeader(intloop), " ")))))
+         
+         If InStr(strFirstPartOfHeader, ".") <= 0 Then
+            strFirstPartOfHeader = strFirstPartOfHeader & "."
+         End If
+         strSecondPartOfHeader = Trim(fnFormatTextRemoveSpecialChars(Mid(sHeader(intloop), InStr(sHeader(intloop), " ") + 1), True))
+         strContent = strContent & strFirstPartOfHeader & " " & strSecondPartOfHeader
+        End If
+    Next intloop
+    strContent = strContent & "."
+    SetClipboard (strContent)
+End Sub
+
+Private Function Extract_TOC() As String
+Dim intParaCount As Integer
+Dim intloop As Integer
+Dim strContent As String
+Dim arrHeadings() As String
+Dim vnword As Variant
+
+    arrHeadings = ActiveDocument.GetCrossReferenceItems(wdRefTypeHeading)
+    
+    intParaCount = ActiveDocument.Paragraphs.Count
+    
+    strContent = ""
+    
+    
+    For intloop = 1 To UBound(arrHeadings)
+    
+    
+       If Left(arrHeadings(intloop), 1) <> " " Then
+       
+         If strContent <> "" Then
+         
+            strContent = strContent & " -- "
+            
+         End If
+         For Each vnword In Split(arrHeadings(intloop), " ")
+            If Len(vnword) > 1 Then
+                If vnword = UCase(vnword) Then
+                    vnword = Left(vnword, 1) & LCase(Mid(vnword, 2))
+                    arrHeadings(intloop) = Replace(arrHeadings(intloop), vnword, vnword, , , vbTextCompare)
+                End If
+            End If
+         Next
+         arrHeadings(intloop) = fnApply_Default_Spelling(arrHeadings(intloop), mfnGetLanguageCode123FromDoc)
+         strContent = strContent & Trim(fnFormatTextRemoveSpecialChars(Left(arrHeadings(intloop), InStr(arrHeadings(intloop), " ")))) & ". " & Trim(fnFormatTextRemoveSpecialChars(Mid(arrHeadings(intloop), InStr(arrHeadings(intloop), " ") + 1), True))
+        
+       End If
+    Next intloop
+    strContent = strContent & "."
+    Extract_TOC = strContent
+
+End Function
+
+Private Function Content_WT_DAILYB() As String
+
+Dim lngPara As Long
+Dim strContent As String
+Dim strPart As String
+Dim lngStartBoldPara As Long
+
+    lngStartBoldPara = 0
+    
+    strContent = ""
+    For lngPara = 1 To ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs.Count
+    
+        strPart = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.text
+        strPart = LCase(strPart)
+        strPart = Trim(fnFormatTextRemoveSpecialChars(strPart, True))
+        
+        If strPart <> "" And strPart <> "End" Then
+        
+            If ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.words(1).Bold = True Then
+                
+                lngStartBoldPara = lngStartBoldPara + 1
+                
+                If lngStartBoldPara >= 3 Then
+                
+                    Call fnReplaceFromPreviousTitle(strPart, strPart, 1033)
+                    strPart = fnApply_Default_Spelling(strPart, 1)
+                    
+                    If strContent <> "" Then
+                       strContent = strContent & " "
+                    End If
+                    strContent = strContent & strPart
+                    If Right(strPart, 1) <> ":" Then
+                      strContent = strContent & "."
+                    End If
+                End If
+            End If
+        End If
+    Next
+    Content_WT_DAILYB = strContent
+
+End Function
+
+Private Function Content_WT_TPR_G() As String
+
+   Content_WT_TPR_G = Extract_TOC
+
+End Function
+
+Private Function mfnIsTrilingualDocument() As Boolean
+Dim lngPara As Long
+Dim vnPara As Variant
+Dim varPara As Paragraph
+Dim lngTriLingualCount As Long
+
+     lngTriLingualCount = 0
+     If ActiveDocument.StoryRanges(wdMainTextStory).Bookmarks.Exists("bmkCommitteeFR") And ActiveDocument.StoryRanges(wdMainTextStory).Bookmarks.Exists("bmkCommitteeSP") Then
+        mfnIsTrilingualDocument = True
+        Exit Function
+     End If
+              
+     For lngPara = 1 To ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs.Count
+       Set varPara = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara)
+       If varPara.Range.Information(wdActiveEndPageNumber) <> 1 Then
+         Exit For
+       End If
+       If varPara.Range.text Like "____________________________________*" Then
+          lngTriLingualCount = lngTriLingualCount + 1
+          If lngTriLingualCount = 1 Then
+             mlngParaStartFrench = lngPara + 1
+          ElseIf lngTriLingualCount = 2 Then
+            mlngParaStartSpanish = lngPara + 1
+          End If
+       End If
+     Next lngPara
+     If lngTriLingualCount >= 2 Then
+        mfnIsTrilingualDocument = True
+        Exit Function
+     End If
+     mfnIsTrilingualDocument = False
+     
+End Function
+
+Public Sub DOL_Macro_GetTitle()
+
+Dim strSymbol As String
+Dim strCommittee As String
+Dim strTitle As String
+Dim blnTrilingual As Boolean
+    
+    Call fnCreateCountryList
+
+    'First get the symbol
+    strSymbol = fnGetSymbolFromDocument()
+    strCommittee = Extract_CommitteeName(strSymbol)
+    
+    If InStr(LCase(strSymbol), "supp.") > 0 Then
+ 
+       MsgBox strSymbol & " is invalid symbol, supplements should have suppl.n. " & vbNewLine & " Do not publish this document, contact DMMP.", vbCritical + vbOKOnly, "DOL Cataloguer Macro"
+       Exit Sub
+       
+    End If
+    
+    
+    If strSymbol Like "WT/DAILYB*" Then
+       strTitle = "Daily Bulletin"
+    ElseIf strSymbol Like "G/AG/N/*" Then
+      strTitle = DOL_Macro_GetTitleG_AG_N(strCommittee)
+    ElseIf strSymbol Like "G/ADP/N/*" And SymbolHasISOCode(strSymbol) Then
+      strTitle = DOL_Macro_GetTitleG_ADP_SCM_N(strCommittee)
+    ElseIf strSymbol Like "G/SCM/N/*" And SymbolHasISOCode(strSymbol) Then
+      strTitle = DOL_Macro_GetTitleG_ADP_SCM_N(strCommittee)
+    Else
+      
+      If mfnIsTrilingualDocument Then
+          blnTrilingual = True
+      Else
+          blnTrilingual = False
+      End If
+
+      If blnTrilingual = False Then
+        strTitle = Trim(fnGetTitle_General(strSymbol, strCommittee, "", blnTrilingual))
+      Else
+        strTitle = Trim(fnGetTitle_General(strSymbol, strCommittee, "English", blnTrilingual))
+        strTitle = strTitle & vbNewLine & vbNewLine & Trim(fnGetTitle_General_TrilingualFrench)
+        strTitle = strTitle & vbNewLine & vbNewLine & Trim(fnGetTitle_General_TrilingualSpanish)
+        strTitle = Replace(strTitle, "*", "")
+        'strTitle = Trim(fnGetTitle_General(strCommittee, "Spanish", blnTrilingual))
+      End If
+      
+ 
+    End If
+    'Selection.TypeText " annotated agenda "
+    'ActiveDocument.Undo 100
+    If Right(strTitle, 1) = "-" Then
+      strTitle = strTitle & " "
+    End If
+    
+    SetClipboard (strTitle)
+    HighlightSymbols
+ On Error GoTo ResetWindow
+    ActiveWindow.ActivePane.View = wdPrintView
+    ActiveWindow.View = wdPrintView
+    ActiveDocument.StoryRanges(wdMainTextStory).Characters(1).Select
+    Selection.GoTo 3, 1
+    
+    Exit Sub
+ResetWindow:
+    On Error GoTo 0
+    ActiveDocument.StoryRanges(wdMainTextStory).Characters(1).Select
+    Selection.GoTo 3, 1
+    
+    ActiveWindow.ActivePane.View = wdPrintView
+    
+    ActiveWindow.View = wdPrintView
+    
+    
+End Sub
+
+Sub fnReplaceFromPreviousTitle(ByRef rstrPara As String, ByVal vstrParaPart As String, ByVal vlngLang As Integer)
+   'Debug.Print "Start"
+
+    Dim cn As Object
+    Dim rs As Object
+    Dim ConnectionString As String
+    Dim StrQuery As String
+    Dim strFirstName As String
+    Dim strTextFromDB As String
+    Dim lngLangCode123 As Integer
+    
+    On Error GoTo ErrorHandler
+    
+    ' handle cases where we know correct syntax
+    'ex: 1 Notification
+    If LCase(rstrPara) = "notificación" Then
+       rstrPara = "Notificación"
+       Exit Sub
+    End If
+    If LCase(rstrPara) = "notification" Then
+       rstrPara = "Notification"
+       Exit Sub
+    End If
+    
+    Select Case vlngLang
+       Case 1033
+          lngLangCode123 = 1
+       Case 1036
+          lngLangCode123 = 2
+       Case 3082
+          lngLangCode123 = 3
+    End Select
+               
+    ConnectionString = "Provider=SQLOLEDB;Data Source=flame2k19.ext.wto, 14133;database=DOL2DB;Trusted_connection=yes;"
+    'Debug.Print ConnectionString
+
+    Set cn = CreateObject("ADODB.Connection")
+    Set rs = CreateObject("ADODB.Recordset")
+
+    cn.Open ConnectionString
+
+    StrQuery = "declare @var as int;" & "begin; if 1> 2 begin set @var=2 set @var=4 end else set  @var=3; end; select @var as title"
+
+    StrQuery = ""
+    StrQuery = StrQuery & "declare @word as varchar(255)" & ";" & vbNewLine
+    StrQuery = StrQuery & "declare @phrase as varchar(2000)" & ";" & vbNewLine
+    StrQuery = StrQuery & "declare @newphrase as varchar(2000)" & ";" & vbNewLine
+    StrQuery = StrQuery & "declare @phraseOrig as varchar(2000)" & ";" & vbNewLine
+    StrQuery = StrQuery & "declare @match_phrase as varchar(2000)" & ";" & vbNewLine
+    StrQuery = StrQuery & "declare @rowcount as integer" & ";" & vbNewLine
+    StrQuery = StrQuery & "set @phrase ='" & Replace(vstrParaPart, "'", "''") & "'" & ";" & vbNewLine
+    StrQuery = StrQuery & "set @phraseOrig = @phrase " & ";" & vbNewLine
+    StrQuery = StrQuery & "Set @match_phrase = null" & ";" & vbNewLine
+    StrQuery = StrQuery & "while charindex( ' ',@phrase) > 0 and @match_phrase is null" & "" & vbNewLine
+    StrQuery = StrQuery & "BEGIN" & "" & vbNewLine
+    StrQuery = StrQuery & "    SELECT top 1 @match_phrase =  d.title" & "" & vbNewLine
+    StrQuery = StrQuery & "    FROM cataloguedetail  d" & "" & vbNewLine
+    StrQuery = StrQuery & "    join catalogueheader h" & "" & vbNewLine
+    StrQuery = StrQuery & "    on h.id = d.CatHeaderID" & "" & vbNewLine
+    StrQuery = StrQuery & "    where d.lcid = " & vlngLang & "" & vbNewLine
+    StrQuery = StrQuery & "    and   d.CatalogueStatus <> 20" & "" & vbNewLine
+    StrQuery = StrQuery & "    and   d.title is not null" & "" & vbNewLine
+    StrQuery = StrQuery & "    and   h.symbols not like 'G/SPS/N%'" & "" & vbNewLine
+    StrQuery = StrQuery & "    and   h.symbols not like 'G/TBT/N%'" & "" & vbNewLine
+    StrQuery = StrQuery & "    and   h.symbols not like 'G/AG/N%'" & "" & vbNewLine
+    StrQuery = StrQuery & "    AND   D.TITLE LIKE '%' + @phrase + '%'" & "" & vbNewLine
+    StrQuery = StrQuery & "    order by  d.CreateDate  desc" & ";" & vbNewLine
+    StrQuery = StrQuery & "    set @rowcount = @@rowcount" & ";" & vbNewLine
+    
+    StrQuery = StrQuery & "    if not @rowcount = 0" & "" & vbNewLine
+    StrQuery = StrQuery & "    begin" & "" & vbNewLine
+    StrQuery = StrQuery & "     set @phrase= substring(@match_phrase,charindex(@phrase,@match_phrase), DATALENGTH(@phrase))" & "" & vbNewLine
+    StrQuery = StrQuery & "    End" & "" & vbNewLine
+    StrQuery = StrQuery & "    Else if @rowcount = 0" & "" & vbNewLine
+    StrQuery = StrQuery & "    BEGIN" & "" & vbNewLine
+    
+    
+    StrQuery = StrQuery & "         set @newphrase = substring(@phrase, 1, datalength(@phrase)/2) " & vbNewLine
+       
+    StrQuery = StrQuery & "         while datalength(@newphrase) < datalength(@phrase) " & vbNewLine
+    StrQuery = StrQuery & "         BEGIN " & vbNewLine
+    StrQuery = StrQuery & "           if substring(@phrase, datalength(@newphrase)+1,1)= ' ' " & vbNewLine
+    StrQuery = StrQuery & "              Break " & vbNewLine
+    StrQuery = StrQuery & "           set @newphrase = @newphrase + substring(@phrase, datalength(@newphrase)+1,1) " & vbNewLine
+    StrQuery = StrQuery & "         End "
+    
+'    StrQuery = StrQuery & "      while substring(@phrase, datalength(@phrase),1)!= ' '" & "" & vbNewLine
+'    StrQuery = StrQuery & "      BEGIN" & "" & vbNewLine
+'    StrQuery = StrQuery & "         set @phrase = substring(@phrase,1, datalength(@phrase)-1)" & "" & vbNewLine
+'    StrQuery = StrQuery & "      End" & "" & vbNewLine
+'    StrQuery = StrQuery & "      set @phrase =RTRIM(@phrase)" & "" & vbNewLine
+    
+    StrQuery = StrQuery & "      set @phrase =RTRIM(@newphrase)" & "" & vbNewLine
+    
+    
+    StrQuery = StrQuery & "    End" & "" & vbNewLine
+    StrQuery = StrQuery & "End" & ";" & vbNewLine
+    StrQuery = StrQuery & "Select @phrase as Name" & ";" & vbNewLine
+'
+'
+'StrQuery = StrQuery & ""
+'set @phrase ='Proposal by Afghanistan; Angola; Argentina; Australia; Benin; Plurinational State of Bolivia; Botswana; Brazil; Burkina Faso; Burundi; Cabo Verde; Cameroon; Canada; Central African Republic; Chad; Chile; China; Colombia; Congo; Costa Rica; Côte d''Ivoire; Cuba; Democratic Republic of Congo; Djibouti; Dominican Republic; Ecuador; Egypt; El Salvador; Eswatini; the European Union; Gabon; The Gambia; Ghana; Guatemala; Guinea; Guinea-Bissau; Honduras; Hong Kong, China; Iceland; India; Indonesia; Israel; Kazakhstan; Kenya; Republic of Korea; Lesotho; Liechtenstein; Madagascar; Malawi; Malaysia; Maldives; Mali; Mauritania; Mauritius; Mexico; Republic of Moldova; Morocco; Mozambique; Namibia; Nepal; New Zealand; Nicaragua; Niger; Nigeria; North Macedonia; Norway; Pakistan; Panama; Paraguay; Peru; Qatar; Russian Federation; Rwanda; Senegal; Seychelles; Sierra Leone; Singapore; South Africa; Switzerland; the Separate Customs Territory of Taiwan, Penghu, Kinmen and Matsu; Tanzania; Thailand; Togo; Tunisi
+'a; Turkey; Uganda; Ukraine; United Kingdom; Uruguay; the Bolivarian Republic of Venezuela; Viet Nam; Zambia and Zimbabwe'
+'--set @phrase ='Presentation by the International Maritime Organization (IMO)'
+'--set  @phrase ='World Organisation for Animal Health (OIE) actions'
+    
+    StrQuery = StrQuery & "Select oe.DName as Name " & "" & vbNewLine
+    StrQuery = StrQuery & "from organizationlist ol" & "" & vbNewLine
+    StrQuery = StrQuery & "join organizationelement oe" & "" & vbNewLine
+    StrQuery = StrQuery & "on ol.id = oe.OrganizationListID" & "" & vbNewLine
+    StrQuery = StrQuery & "where @phraseOrig like '%' + oe.dname +'%'" & "" & vbNewLine
+    StrQuery = StrQuery & "and  OE.LCID = " & vlngLang & "" & vbNewLine
+    StrQuery = StrQuery & "and Ol.HNAME not in('OriGIn','Reunion','Reunión','Réunion')" & vbNewLine
+    
+    StrQuery = StrQuery & "" & ";" & vbNewLine
+    StrQuery = StrQuery & "Select distinct oe.Acronym  as Name" & "" & vbNewLine
+    StrQuery = StrQuery & "from organizationlist ol" & "" & vbNewLine
+    StrQuery = StrQuery & "join organizationelement oe" & "" & vbNewLine
+    StrQuery = StrQuery & "on ol.id = oe.OrganizationListID" & "" & vbNewLine
+    StrQuery = StrQuery & "where (   @phraseOrig like '%(' + oe.Acronym +')%'" & "" & vbNewLine
+    StrQuery = StrQuery & "       or @phraseOrig like '% ' + oe.Acronym +' %'" & "" & vbNewLine
+    StrQuery = StrQuery & "        and oe.Acronym <> '')" & "" & vbNewLine
+    StrQuery = StrQuery & "and OE.LCID = " & vlngLang & "" & vbNewLine
+    StrQuery = StrQuery & "and Ol.HNAME not in('OriGIn','Reunion','Reunión','Réunion') ; " & vbNewLine
+    
+    
+    StrQuery = StrQuery & "select Name" & "" & vbNewLine
+    StrQuery = StrQuery & "from v_countrynames c" & "" & vbNewLine
+    StrQuery = StrQuery & "where @phraseOrig like '%'+Name + '%'" & "" & vbNewLine
+    StrQuery = StrQuery & "and c.lang= " & lngLangCode123 & "" & vbNewLine
+    StrQuery = StrQuery & "and c.Name not in('OriGIn','Reunion','Reunión','Réunion') ;" & vbNewLine
+ 
+    With cn
+      .CommandTimeout = 60
+    End With
+
+    With rs
+       .CursorLocation = 3 ' adUseClient
+       .ActiveConnection = cn
+       .CursorType = 3 ' adOpenStatic
+       .Open StrQuery
+    End With
+    
+    Do
+       If Not rs.EOF Then
+           'do something
+           Do While Not rs.EOF
+             strTextFromDB = rs("Name")
+             If strTextFromDB <> "" Then
+                rstrPara = Replace(rstrPara, strTextFromDB, strTextFromDB, , , vbTextCompare)
+                
+             End If
+             rs.MoveNext
+           Loop
+       End If
+       Set rs = rs.NextRecordset
+       If rs Is Nothing Then
+           Exit Do
+       End If
+    Loop Until rs.State = 0 'adStateClosed
+    
+   
+    cn.Close
+    
+    'fnGetPreviousTitle = strTitle
+    Exit Sub
+ErrorHandler:
+    MsgBox Err.Number & " :" & Err.Description
+    On Error Resume Next
+    If Not rs Is Nothing Then
+        rs.Close
+    End If
+    cn.Close
+    Set rs = Nothing
+    Set cn = Nothing
+'    fnGetPreviousTitle = ""
+End Sub
+
+
+Function Use_Default_Spelling(ByVal vpara As Paragraph) As String
+
+'PURPOSE: To apply first suggestion from Spell Checker to all mispelled words in
+'document (ignores words with capital letters)
+'SOURCE: www.TheSpreadsheetGuru.com
+
+Dim wd As Range
+Dim Oldtxt As String
+Dim Newtxt As String
+Dim Sugg As SpellingSuggestions
+Dim AddSpace As String
+Dim strPara As String
+
+'Turn off Settings for Optimization
+'    Application.ScreenUpdating = False
+ ' Application.ScreenUpdating = True
+'Loop Through Each Word in Document
+    'For Each wd In ActiveDocument.Words
+
+        strPara = ""
+        
+        For Each wd In vpara.Range.words
+        
+        'wd.Text = LCase(wd.Text)
+        Oldtxt = wd.text
+        
+        'Check spelling of word, Ignores Uppercase words to prevent overriding
+        'acronyms or unusual names
+            If Not Application.CheckSpelling(word:=Oldtxt, IgnoreUppercase:=True) Then
+                
+                Set Sugg = Application.GetSpellingSuggestions(Oldtxt)
+                
+                If Sugg.Count <> 0 Then
+                    'Retrieve First suggestion from suggestion list
+                        Newtxt = Application.GetSpellingSuggestions(Oldtxt).Item(1)
+                
+                    'Keep space inbetween words
+                        If Right(Oldtxt, 1) = " " Then
+                            AddSpace = " "
+                        Else
+                            AddSpace = ""
+                        End If
+
+                    'Replace mispelled word with Spellcheck's Suggestion
+                        strPara = strPara & Newtxt & AddSpace
+                End If
+            Else
+                    If Right(Oldtxt, 1) = " " Then
+                            AddSpace = " "
+                        Else
+                            AddSpace = ""
+                        End If
+                    strPara = strPara & Oldtxt & AddSpace
+            End If
+    Next wd
+
+    Use_Default_Spelling = strPara
+'Return Settings To Normal
+    'Application.ScreenUpdating = True
+
+End Function
+
+Function fnApply_Default_Spelling(ByVal vpara As String, ByVal vlnglanguageCode As Long) As String
+
+'PURPOSE: To apply first suggestion from Spell Checker to all mispelled words in
+'document (ignores words with capital letters)
+'SOURCE: www.TheSpreadsheetGuru.com
+
+Dim wd As Variant
+Dim Oldtxt As String
+Dim Newtxt As String
+Dim Sugg As SpellingSuggestions
+Dim AddSpace As String
+Dim strPara As String
+Dim strWord As String
+Dim strMonthNames As String
+
+
+'Turn off Settings for Optimization
+'    Application.ScreenUpdating = False
+ ' Application.ScreenUpdating = True
+'Loop Through Each Word in Document
+    'For Each wd In ActiveDocument.Words
+
+        strPara = ""
+       strMonthNames = "January,February,March,April,May,June,July,August,September,October,November,December,and,or"
+        For Each wd In Split(strMonthNames, ",")
+          
+          vpara = Replace(vpara, wd, wd, , , vbTextCompare)
+        Next
+        vpara = fnReplaceCountryNames(vpara, vlnglanguageCode)
+    fnApply_Default_Spelling = vpara
+
+End Function
+
+Public Sub DOL_Macro_GetCountryConcernedFromDocument()
+Dim strCountries As String
+Dim lngCount As Long
+   strCountries = fn_Get_CountryNames_FromDocument(False, lngCount)
+   SetClipboard (strCountries)
+     
+End Sub
+
+Public Sub DOL_Macro_GetCountryConcernedFromMinutes()
+Dim strCountries As String
+Dim lngCount As Long
+   strCountries = fn_Get_CountryNames_FromDocument(True, lngCount)
+   SetClipboard (strCountries)
+     
+End Sub
+
+
+
+Public Function fn_Get_CountryNames_FromDocument(ByVal vblnMinutesUnderlinedOnly As Boolean, ByRef rlngCount As Long) As String
+
+Dim sFindText As String
+Dim lngI As Long
+Dim strTerm As Variant
+Dim strTermFound As Variant
+Dim strFinalCountries As String
+    'Start from the top of the document
+    
+    sFindText = "Procedure Step:"
+    Call fnCreateCountryList
+    
+    strFinalCountries = ""
+    rlngCount = 0
+    For lngI = LBound(arrCountryNames) To UBound(arrCountryNames)
+    
+       For Each strTerm In Split(arrCountryNames(lngI, 1), "#")
+       
+'        If strTerm Like "Chinese*" Then
+'          Debug.Print strTerm
+'        End If
+        
+        Selection.HomeKey wdStory
+        
+        Selection.Find.Execute strTerm
+        Do Until Selection.Find.Found = False
+        
+          If Selection.Range.Style.NameLocal <> "Caption" _
+             And Selection.Range.Style.NameLocal <> "WTOTable1" _
+             And Selection.Range.Style.NameLocal <> "Note Text" _
+          Then
+          
+            If Selection.Range.Tables.Count = 0 Then
+            
+              If vblnMinutesUnderlinedOnly = False Or Selection.Range.Underline = wdUnderlineSingle Then
+                
+                strTermFound = LCase(Selection.Range.text)
+                strTermFound = Replace(strTermFound, Chr(160), Chr(32))
+                strTermFound = Trim(strTermFound)
+                
+                If strTermFound = LCase(strTerm) Then
+                    Selection.Range.HighlightColorIndex = wdYellow
+                    
+                    If LCase(strTermFound) Like "plurinational*" Then
+                      Debug.Print "test"
+                    End If
+                    
+                    If InStr(";" & strFinalCountries & ";", ";" & fn_Get_CountryName_FromArray(lngI, 1) & ";") <= 0 Then
+                    
+                      If strFinalCountries <> "" Then
+                         strFinalCountries = strFinalCountries & ";"
+                      End If
+                      strFinalCountries = strFinalCountries & arrCountryNames(lngI, 5)
+                      rlngCount = rlngCount + 1
+                    End If
+                Else
+                    Selection.Range.HighlightColorIndex = wdRed
+                End If
+              End If
+              
+             End If
+          End If
+          Selection.MoveRight
+          Selection.Find.Execute
+        Loop
+        
+       Next
+    Next
+    
+    fn_Get_CountryNames_FromDocument = strFinalCountries
+   
+End Function
+Public Function fn_Get_CountryName_FromArray(ByVal vlngIndex As Long, ByVal vlngLang As Long) As String
+
+  If arrCountryNames(vlngIndex, vlngLang) = "" Then
+    fn_Get_CountryName_FromArray = ""
+  Else
+    fn_Get_CountryName_FromArray = Trim(Split(arrCountryNames(vlngIndex, vlngLang), "#")(0))
+  End If
+
+End Function
+
+Private Function fn_Get_CountryNameFromSymbol(ByVal vstrSymbol As String, ByVal vlngLang As Long) As String
+Dim lngI As Long
+
+Dim vnSymbol As Variant
+Dim strNames As String
+
+   strNames = ""
+  
+   For Each vnSymbol In Split(vstrSymbol, "#")
+        For lngI = LBound(arrCountryNames) To UBound(arrCountryNames)
+        
+          If vnSymbol Like "*/" & fn_Get_CountryName_FromArray(lngI, 4) & "/*" Then
+              If strNames <> "" Then
+                 strNames = strNames & " - "
+              End If
+              strNames = strNames & fn_Get_CountryName_FromArray(lngI, vlngLang)
+              Exit For
+          End If
+        Next lngI
+   Next vnSymbol
+  fn_Get_CountryNameFromSymbol = strNames
+   
+End Function
+
+Private Function SymbolHasISOCode(ByVal vstrSymbols As String) As Boolean
+Dim lngI As Long
+
+Dim vnSymbol As Variant
+Dim arrSymbolParts As Variant
+
+   
+   For Each vnSymbol In Split(vstrSymbols, "#")
+   
+        arrSymbolParts = Split(vnSymbol, "/")
+        'G/ADP/N/Number/ISO
+        If UBound(arrSymbolParts) >= 4 Then
+                
+            For lngI = LBound(arrCountryNames) To UBound(arrCountryNames)
+            
+              If arrSymbolParts(4) = fn_Get_CountryName_FromArray(lngI, 4) Then
+                 SymbolHasISOCode = True
+                 Exit Function
+              End If
+            Next lngI
+        End If
+   Next vnSymbol
+  SymbolHasISOCode = False
+   
+End Function
+
+
+Private Function fnReplaceCountryNames(ByVal vstrText As String, ByVal vlngLanguage As Long)
+
+Dim strText As String
+Dim lngI As Long
+
+   strText = vstrText
+   strText = Replace(strText, ChrW(304), "i")
+   For lngI = LBound(arrCountryNames) To UBound(arrCountryNames)
+    
+      If LCase(arrCountryNames(lngI, vlngLanguage)) <> "" Then
+        If LCase(Trim(strText)) Like "*" & LCase(fn_Get_CountryName_FromArray(lngI, vlngLanguage)) & "*" Then
+            strText = Replace(strText, fn_Get_CountryName_FromArray(lngI, vlngLanguage), fn_Get_CountryName_FromArray(lngI, vlngLanguage), , , vbTextCompare)
+        End If
+      End If
+   Next lngI
+   fnReplaceCountryNames = strText
+
+End Function
+Private Function fn_Get_CountryNameFromName(ByVal vstrName As String, ByVal vlngLang As Long)
+Dim lngI As Long
+
+Dim vnName As Variant
+Dim strNames As String
+Dim blnFound As Boolean
+
+   blnFound = False
+   
+   'First translate country names for exceptions
+   Select Case LCase(vstrName)
+        Case LCase("UNITED STATES OF AMERICA")
+            vstrName = "United States"
+        Case LCase("ÉTATS-UNIS D'AMÉRIQUE")
+            vstrName = "États-Unis"
+        Case LCase("ÉTATS-UNIS D'AMÉRIQUE")
+            vstrName = "Estados Unidos"
+   End Select
+   
+   strNames = vstrName
+    For lngI = LBound(arrCountryNames) To UBound(arrCountryNames)
+    
+      If LCase(Trim(vstrName)) = LCase(fn_Get_CountryName_FromArray(lngI, vlngLang)) Then
+          strNames = fn_Get_CountryName_FromArray(lngI, vlngLang)
+          blnFound = True
+          Exit For
+      End If
+    Next lngI
+
+  If blnFound = False And InStr(vstrName, ",") > 0 Then
+    strNames = ""
+    For Each vnName In Split(vstrName, ",")
+       blnFound = False
+       For lngI = LBound(arrCountryNames) To UBound(arrCountryNames)
+         If LCase(Trim(vnName)) = LCase(fn_Get_CountryName_FromArray(lngI, vlngLang)) Then
+              If strNames <> "" Then
+                 strNames = strNames & ", "
+              End If
+              strNames = strNames & fn_Get_CountryName_FromArray(lngI, vlngLang)
+              blnFound = True
+              Exit For
+          End If
+       Next lngI
+       If blnFound = False Then
+           If strNames <> "" Then
+                 strNames = strNames & ", "
+           End If
+           strNames = strNames & vnName
+       
+       End If
+    Next vnName
+    
+  
+  End If
+  fn_Get_CountryNameFromName = strNames
+   
+End Function
+Function DOL_Macro_GetTitleG_AG_N(ByVal vstrCommittee As String) As String
+    
+Dim strTitle As String
+
+    strTitle = vstrCommittee
+    
+    strTitle = fnAppendText(strTitle, Extract_TextByTitle("Title"))
+    strTitle = fnAppendText(strTitle, Extract_BoldTextFromFirstParagraph())
+    strTitle = fnAppendText(strTitle, Extract_TextByTitle("Title 3"))
+    DOL_Macro_GetTitleG_AG_N = strTitle
+     
+
+End Function
+
+Function DOL_Macro_GetTitleG_ADP_SCM_N(ByVal vstrCommittee As String) As String
+    
+    
+    
+Dim strTitle As String
+
+    strTitle = vstrCommittee
+    
+    strTitle = fnAppendText(strTitle, Extract_TextByTitle("Title"))
+    strTitle = fnAppendText(strTitle, fnGetReportingPeriodFromFirstParagraph())
+    strTitle = fnAppendText(strTitle, Extract_TextByTitle("Title Country"))
+    strTitle = fnAppendText(strTitle, Extract_TextByTitle("Title 3"))
+ 
+    DOL_Macro_GetTitleG_ADP_SCM_N = strTitle
+     
+
+End Function
+
+Private Function mfnGetLanguageCode123FromDoc() As Long
+
+Dim lngLangaugeCode As Long
+
+  Select Case mfnGetDOLLanguageFromDocument
+    Case 1033
+      lngLangaugeCode = 1
+    Case 1036
+      lngLangaugeCode = 2
+    Case 3082
+      lngLangaugeCode = 3
+    Case Else
+      lngLangaugeCode = 1
+  End Select
+  mfnGetLanguageCode123FromDoc = lngLangaugeCode
+     
+
+End Function
+Private Function mfnGetDOLLanguageFromDocument() As Long
+  
+     Select Case Trim(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(1).Range.words(1).LanguageID)
+          Case 2057, 1033, 3081, 10249, 4105, 9225, 14345, 6153, 8201, 5129, 13321, 7177, 11273, 2057, 12297 'English
+            mfnGetDOLLanguageFromDocument = 1033
+          Case 4108, 1036, 11276, 3084, 998, 12300, 15372, 5132, 13324, 6156, 114348, 8204, 10252, 7180 'French
+            mfnGetDOLLanguageFromDocument = 1036
+          Case 3082, 1034, 11274, 16394, 13322, 9226, 5130, 7178, 12298, 17418, 4106, 18442, 19466, 6154, 15370, 10250, 20490, 14346, 8202 'Spanish
+            mfnGetDOLLanguageFromDocument = 3082
+          Case Else
+            mfnGetDOLLanguageFromDocument = 1033
+        End Select
+End Function
+
+Private Function fnAppendText(ByVal vstrText As String, ByVal vstrPart As String) As String
+  
+   If Trim(vstrPart) = "" Then
+     fnAppendText = vstrText
+     Exit Function
+   End If
+   If vstrText <> "" Then
+     vstrText = vstrText & " - "
+   End If
+   
+   fnAppendText = vstrText & vstrPart
+   
+End Function
+
+Private Function fnExistsPageHeader() As Boolean
+
+Dim vnHeader As Variant
+  On Error GoTo PageHeaderDoesNotExists
+  
+   Set vnHeader = ActiveDocument.StoryRanges(wdFirstPageHeaderStory)
+   fnExistsPageHeader = True
+    Exit Function
+PageHeaderDoesNotExists:
+   fnExistsPageHeader = False
+  
+End Function
+Private Function fnGetSymbolFromDocument() As String
+
+Dim strSymbol As String
+Dim lngLoopI As Long
+    'First find based on bookmark
+    On Error GoTo SymbolNotFound
+    If fnExistsPageHeader = True Then
+    
+        If ActiveDocument.StoryRanges(wdFirstPageHeaderStory).Bookmarks.Exists("bmkSymbols") Then
+            ActiveDocument.StoryRanges(wdFirstPageHeaderStory).Bookmarks("bmkSymbols").Select
+            strSymbol = Selection.Range.text
+        ElseIf ActiveDocument.StoryRanges(wdFirstPageHeaderStory).Tables.Count >= 1 Then
+            ActiveDocument.StoryRanges(wdFirstPageHeaderStory).Tables(1).Range.Cells(5).Range.Select
+            strSymbol = Selection.Range.text
+        Else
+          For lngLoopI = 1 To 10
+          If InStr(1, ActiveDocument.Paragraphs(lngLoopI).Range.text, "Daily Bulletin", vbTextCompare) > 0 Then
+            strSymbol = "WT/DAILYB"
+            Exit For
+          End If
+          Next lngLoopI
+       
+           strSymbol = ""
+        End If
+    Else
+    
+      For lngLoopI = 1 To 10
+         If InStr(1, ActiveDocument.Paragraphs(lngLoopI).Range.text, "Daily Bulletin", vbTextCompare) > 0 Then
+           strSymbol = "WT/DAILYB"
+           Exit For
+         End If
+       Next lngLoopI
+
+    End If
+    
+    fnGetSymbolFromDocument = fnFormatTextRemoveSpecialChars(strSymbol, False, "#")
+    
+
+    Exit Function
+
+SymbolNotFound:
+    fnGetSymbolFromDocument = ""
+
+End Function
+
+Private Function Extract_CommitteeName(ByVal vstrSymbol As String) As String
+
+Dim strCommittee As String
+
+    'First find based on bookmark
+    On Error GoTo CommitteeNotFound
+      
+    
+    If ActiveDocument.StoryRanges(wdFirstPageHeaderStory).Bookmarks.Exists("bmkCommittee") = True Then
+        'ActiveDocument.StoryRanges(wdFirstPageHeaderStory).Bookmarks("bmkCommittee").Select
+        If vstrSymbol Like "WT/MIN(24)/*" Then
+          strCommittee = ActiveDocument.StoryRanges(wdFirstPageHeaderStory).Tables(1).Range.Cells(9).Range.text
+        Else
+           strCommittee = ActiveDocument.StoryRanges(wdFirstPageHeaderStory).Bookmarks("bmkCommittee").Range.text
+        End If
+    ElseIf ActiveDocument.StoryRanges(wdFirstPageHeaderStory).Tables.Count >= 1 Then
+        'ActiveDocument.StoryRanges(wdFirstPageHeaderStory).Tables(1).Range.Cells(9).Range.Select
+        strCommittee = ActiveDocument.StoryRanges(wdFirstPageHeaderStory).Tables(1).Range.Cells(9).Range.text
+    Else
+        strCommittee = ""
+    End If
+    
+    If InStr(strCommittee, "Original") > 0 Then
+        strCommittee = Left(strCommittee, InStr(strCommittee, "Original") - 1)
+    End If
+    Extract_CommitteeName = fnFormatTextRemoveSpecialChars(strCommittee, False, "-")
+    Exit Function
+
+CommitteeNotFound:
+    Extract_CommitteeName = ""
+
+End Function
+Private Function Extract_TextByTitle(Optional ByVal vstrTitleStyleName As String = "") As String
+
+Dim strTitle As String
+Dim strTitlePart As String
+Dim blnFound As Boolean
+
+
+    On Error GoTo TitleError
+    
+    ActiveDocument.StoryRanges(wdMainTextStory).Characters(1).Select
+    Selection.HomeKey Unit:=wdStory
+    Selection.Find.ClearFormatting
+    If vstrTitleStyleName = "" Then
+      Selection.Find.Style = ActiveDocument.Styles("Title")
+    Else
+      Selection.Find.Style = ActiveDocument.Styles(vstrTitleStyleName)
+    End If
+
+    With Selection.Find
+        .text = ""
+        .Replacement.text = ""
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = True
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchWildcards = False
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+    End With
+
+    strTitle = ""
+    
+    blnFound = Selection.Find.Execute
+    
+    If Selection.Information(wdActiveEndAdjustedPageNumber) <> 1 Then
+        
+      Extract_TextByTitle = ""
+      Exit Function
+      
+    End If
+    
+    Do While blnFound = True
+    
+        strTitlePart = Selection.Range.text
+
+        strTitlePart = fnFormatTextRemoveSpecialChars(strTitlePart, True, "")
+        
+        Call fnReplaceFromPreviousTitle(strTitlePart, strTitlePart, mfnGetDOLLanguageFromDocument())
+        strTitlePart = fnReplaceCountryNames(strTitlePart, mfnGetLanguageCode123FromDoc)
+        strTitle = fnAppendText(strTitle, strTitlePart)
+                
+        'Get next part of title
+        Selection.Move wdWord
+        Selection.Expand Unit:=wdSentence
+        
+        If (vstrTitleStyleName = "" And IsTitleFont(Selection.Style.NameLocal)) _
+           Or Selection.Style.NameLocal = vstrTitleStyleName Then
+           blnFound = True
+        Else
+            blnFound = False
+        End If
+    Loop
+    
+    Extract_TextByTitle = strTitle
+
+    Exit Function
+TitleError:
+    Extract_TextByTitle = strTitle
+    
+End Function
+
+Private Function Extract_First_Para() As String
+  Dim lngPara As Long
+  Dim strPara As String
+  Dim strTheFollowingPara As String
+    
+  Select Case mfnGetDOLLanguageFromDocument()
+   Case 1033
+    strTheFollowingPara = "The following communication*"
+   Case 1036
+    strTheFollowingPara = "La communication ci-après*"
+   Case 3082
+    strTheFollowingPara = "La siguiente comunicación*"
+  End Select
+    
+  lngPara = 1
+  
+  Do While IsTitleFont(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Style.NameLocal)
+    lngPara = lngPara + 1
+  Loop
+  
+  
+  Do While ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Style.NameLocal Like "Normal*" Or IsBodyTextFont(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Style.NameLocal)
+  
+    If ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.text Like strTheFollowingPara Then
+      lngPara = lngPara + 1
+    ElseIf ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.text Like "_*" Then
+       lngPara = lngPara + 1
+    Else
+       Exit Do
+    End If
+    lngPara = lngPara + 1
+  Loop
+  
+  strPara = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.text
+  
+  strPara = fnFormatTextRemoveSpecialChars(strPara, True, "")
+  Extract_First_Para = strPara
+
+End Function
+
+Private Function Content_G_ADP_SCM_N() As String
+
+  Dim lngPara As Long
+  Dim strPara As String
+  Dim strReportingPeriod As String
+  lngPara = 1
+  
+  Do While Not ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Style.NameLocal Like "Normal*"
+    lngPara = lngPara + 1
+    
+  Loop
+  
+  'lngPara now has the first normal paragraph
+  'Extract the reporting period
+  'reg expression
+  'period(.*)from
+  
+  strPara = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.text
+        Select Case Trim(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.words(1).LanguageID)
+          Case 2057, 1033, 3081, 10249, 4105, 9225, 14345, 6153, 8201, 5129, 13321, 7177, 11273, 2057, 12297 'English
+            strReportingPeriod = Extract_ReportingPeriod(strPara, "Reproduced herewith is the (.*)")
+          Case 4108, 1036, 11276, 3084, 998, 12300, 15372, 5132, 13324, 6156, 114348, 8204, 10252, 7180 'French
+            strReportingPeriod = Extract_ReportingPeriod(strPara, "On trouvera ci-joint le (.*)")
+          Case 3082, 1034, 11274, 16394, 13322, 9226, 5130, 7178, 12298, 17418, 4106, 18442, 19466, 6154, 15370, 10250, 20490, 14346, 8202 'Spanish
+            strReportingPeriod = Extract_ReportingPeriod(strPara, "En este documento se reproduce el (.*)")
+          Case Else
+            strReportingPeriod = ""
+        End Select
+  
+  
+  strReportingPeriod = fnFormatTextRemoveSpecialChars(strReportingPeriod, True, "")
+  Content_G_ADP_SCM_N = strReportingPeriod
+  
+
+
+End Function
+
+Private Function fnGetReportingPeriodFromFirstParagraph() As String
+
+  Dim lngPara As Long
+  Dim strPara As String
+  Dim strReportingPeriod As String
+  lngPara = 1
+  
+  Do While Not ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Style.NameLocal Like "Normal*"
+    lngPara = lngPara + 1
+    
+  Loop
+  
+  'lngPara now has the first normal paragraph
+  'Extract the reporting period
+  'reg expression
+  'period(.*)from
+  
+  strPara = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.text
+        Select Case Trim(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(lngPara).Range.words(1).LanguageID)
+          Case 2057, 1033, 3081, 10249, 4105, 9225, 14345, 6153, 8201, 5129, 13321, 7177, 11273, 2057, 12297 'English
+            strReportingPeriod = Extract_ReportingPeriod(strPara, "period(.*)from")
+          Case 4108, 1036, 11276, 3084, 998, 12300, 15372, 5132, 13324, 6156, 114348, 8204, 10252, 7180 'French
+            strReportingPeriod = Extract_ReportingPeriod(strPara, "période du(.*)[.]")
+          Case 3082, 1034, 11274, 16394, 13322, 9226, 5130, 7178, 12298, 17418, 4106, 18442, 19466, 6154, 15370, 10250, 20490, 14346, 8202 'Spanish
+            strReportingPeriod = Extract_ReportingPeriod(strPara, "entre el(.*)presentado")
+          Case Else
+            strReportingPeriod = ""
+        End Select
+  
+  
+  strReportingPeriod = fnFormatTextRemoveSpecialChars(strReportingPeriod, False, "")
+  fnGetReportingPeriodFromFirstParagraph = strReportingPeriod
+  
+
+
+End Function
+
+
+Private Function Extract_BoldTextFromFirstParagraph() As String
+
+Dim strTitle As String
+Dim strTitlePart As String
+Dim blnFound As Boolean
+Dim vrSentences As word.Sentences
+Dim vrWord As word.Range
+
+Dim arrParts(3) As String
+Dim loopCount As Integer
+Dim strTableName As String
+Dim strLanguage As String
+Dim strFullText As String
+Dim lngPos1 As Integer
+Dim lngPos2 As Integer
+Dim strTemp As String
+Dim i As Integer
+Dim strTableType As String
+
+Dim intFirstParaNumber As Integer
+
+    On Error GoTo TitleError
+    Extract_BoldTextFromFirstParagraph = ""
+    
+    If IsTitleFont(ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(2).Style.NameLocal) Then
+      intFirstParaNumber = 3
+    Else
+      intFirstParaNumber = 2
+    End If
+    loopCount = 1
+    
+    arrParts(1) = ""
+    arrParts(2) = ""
+    arrParts(3) = ""
+    
+    For Each vrWord In ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(intFirstParaNumber).Range.words
+    
+      'If ISIN(vrWord, Array(".", ";", Chr(13), Chr(10), Chr(7))) = False Then
+        
+        If vrWord.Font.Bold <> False Then
+          If arrParts(loopCount) <> "" Then
+             arrParts(loopCount) = arrParts(loopCount) & " "
+          End If
+            arrParts(loopCount) = arrParts(loopCount) & Trim(vrWord.text)
+        Else
+                    
+          If arrParts(loopCount) <> "" Then
+          
+             If loopCount = 1 And arrParts(loopCount) Like "d'*" Then
+               arrParts(loopCount) = Mid(arrParts(loopCount), 3)
+             End If
+             loopCount = loopCount + 1
+             
+             If loopCount > UBound(arrParts) Then
+                Exit For
+             End If
+          End If
+                
+        End If
+      'End If
+    Next
+        
+    If arrParts(3) Like "*Table*" Or arrParts(3) Like "*tableau*" Or arrParts(3) Like "*cuadro*" Then
+    
+       strTemp = arrParts(3)
+       arrParts(3) = arrParts(2)
+       arrParts(2) = strTemp
+    
+    End If
+    
+    arrParts(2) = Replace(arrParts(2), " : ", ":")
+    arrParts(2) = Replace(arrParts(2), " . ", ".")
+    For i = 1 To 3
+        
+        arrParts(i) = Trim(arrParts(i))
+        
+        If Right(arrParts(i), 1) = "." Then
+           arrParts(i) = Left(arrParts(i), Len(arrParts(i)) - 1)
+        End If
+        arrParts(i) = Trim(arrParts(i))
+        If InStr(arrParts(i), "l'") > 0 Then
+           arrParts(i) = Mid(arrParts(i), InStr(arrParts(i), "l'") + 2)
+        End If
+        
+         arrParts(i) = Replace(arrParts(i), " - ", "-")
+         arrParts(i) = Replace(arrParts(i), "  ", " ")
+    Next
+    
+    
+    strTableName = ""
+    If arrParts(2) Like "*Table*" Then
+      strLanguage = "E"
+    ElseIf arrParts(2) Like "*tableau*" Then
+      strLanguage = "F"
+    Else
+      strLanguage = "S"
+    End If
+          
+    strTableType = Replace(Replace(arrParts(2), "(", ""), ")", "")
+    
+    strTableType = Replace(strTableType, "tableau", "Tableau")
+    strTableType = Replace(strTableType, "cuadro", "Cuadro")
+    strTableType = fnFormatTextRemoveSpecialChars(strTableType, False, False)
+    
+    arrParts(2) = Replace(arrParts(2), " ", "")
+   
+    'Fix the table name
+    If arrParts(2) Like "*ES?1*" Or arrParts(2) Like "*ES?2*" Or arrParts(2) Like "*ES?3*" Then
+    
+      Select Case strLanguage
+      Case "E"
+        strTableName = "Export subsidy"
+      Case "F"
+        strTableName = "Subventions à l'exportation"
+      Case "S"
+        strTableName = "Subvenciones a la exportación"
+      End Select
+      
+      strTableName = strTableName & " - " & strTableType
+       
+     ElseIf arrParts(2) Like "*ER?1*" Then
+     
+      Select Case strLanguage
+      Case "E"
+        strTableName = "Export prohibitions or restrictions"
+      Case "F"
+        strTableName = "Prohibitions et restrictions à l'exportation"
+      Case "S"
+        strTableName = "Prohibiciones o restricciones a la exportación"
+      End Select
+      
+      strTableName = strTableName & " - " & strTableType
+      
+     ElseIf arrParts(2) Like "*DS?1*" Or arrParts(2) Like "*DS?2*" Then
+    
+      Select Case strLanguage
+      Case "E"
+        strTableName = "Domestic support"
+      Case "F"
+        strTableName = "Soutien interne"
+      Case "S"
+        strTableName = "Ayuda interna"
+      End Select
+      strTableName = strTableName & " - " & strTableType
+      
+     ElseIf arrParts(2) Like "*MA?1*" Or arrParts(2) Like "*MA?2*" Then
+    
+        Select Case strLanguage
+        Case "E"
+          strTableName = "Tariff quotas"
+        Case "F"
+          strTableName = "Contingents tarifaires"
+        Case "S"
+          strTableName = "Contingentes arancelarios"
+        End Select
+        strTableName = strTableName & " - " & strTableType
+        
+     ElseIf arrParts(2) Like "*MA?3*" Or arrParts(2) Like "*MA?4*" Or arrParts(2) Like "*MA?5*" Then
+    
+        Select Case strLanguage
+        Case "E"
+          strTableName = "Special safeguard"
+        Case "F"
+          strTableName = "Sauvegarde spéciale"
+        Case "S"
+          strTableName = "Salvaguardia especial"
+        End Select
+        strTableName = strTableName & " - " & strTableType
+        
+     ElseIf arrParts(2) Like "*NF?1*" Then
+        
+       'Get the full text for decission
+       'Decision on Measures Concerning the Possible Negative Effects of the Reform Programme on
+       'Least-Developed and Net Food-Importing Developing Countries
+        
+        strFullText = ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(intFirstParaNumber).Range.text
+
+        Select Case strLanguage
+        Case "E"
+           
+           lngPos1 = InStr(LCase(strFullText), "decision")
+           lngPos2 = InStr(LCase(strFullText), "(table")
+           
+        
+        Case "F"
+           lngPos1 = InStr(LCase(strFullText), "décision")
+           lngPos2 = InStr(LCase(strFullText), "(tableau")
+        Case "S"
+           lngPos1 = InStr(LCase(strFullText), "decisión")
+           lngPos2 = InStr(LCase(strFullText), "(cuadro")
+        End Select
+  
+        strTableName = SubString(strFullText, lngPos1, lngPos2 - lngPos1)
+        strTableName = SentenceCase(strTableName)
+        strTableName = strTableName & " - " & strTableType
+     End If
+    
+'    If strLanguage = "F" Then
+'
+'        arrParts(3) = Replace(arrParts(3), "Ur l'", "")
+'
+'    End If
+    If Trim(arrParts(3)) <> "" Then
+      strTitle = arrParts(1) & " - " & strTableName & " - " & SentenceCase(arrParts(3))
+    Else
+      strTitle = arrParts(1) & " - " & strTableName
+    End If
+    
+    strTitle = Replace(strTitle, "  ", " ")
+    strTitle = Replace(strTitle, Chr(30), "-")
+    
+    strTitle = fnFormatTextRemoveSpecialChars(strTitle, False, False)
+    If Right(strTitle, 2) = " ." Then
+       strTitle = Left(strTitle, Len(strTitle) - 2)
+    End If
+    If Right(strTitle, 1) = "." Then
+       strTitle = Left(strTitle, Len(strTitle) - 1)
+    End If
+    
+    Extract_BoldTextFromFirstParagraph = strTitle
+
+    Exit Function
+TitleError:
+    Extract_BoldTextFromFirstParagraph = strTitle
+    
+End Function
+
+
+
+
+
+Private Function SentenceCase(ByVal vstrText As String)
+
+  On Error GoTo SenteceCaseError
+  
+  
+  SentenceCase = UCase(Left(vstrText, 1)) & Mid(vstrText, 2)
+      
+  Exit Function
+
+SenteceCaseError:
+
+SentenceCase = vstrText
+End Function
+
+Private Function SubString(ByVal vstrString As String, vlngStart As Integer, vlnglength As Integer) As String
+
+Dim strResult As String
+
+    On Error GoTo SubstringError
+    SubString = Mid(vstrString, vlngStart, vlnglength)
+    
+    Exit Function
+SubstringError:
+    SubString = ""
+    
+End Function
+
+Private Function fnFormatTextRemoveSpecialChars(ByVal vstrText As String, Optional ByVal vblnCapitalise As Boolean = False, Optional ByVal ovblnReplaceNL As String = "") As String
+        
+        
+        vstrText = Replace(vstrText, "Council for Trade-Related Aspects of" & Chr(13) & "Intellectual Property Rights", "Council for Trade-Related Aspects of Intellectual Property Rights")
+        vstrText = Replace(vstrText, "Conseil des aspects des droits de propriété" & Chr(13) & "intellectuelle qui touchent au commerce", "Conseil des aspects des droits de propriété intellectuelle qui touchent au commerce")
+        vstrText = Replace(vstrText, "Consejo de los Aspectos de los Derechos de Propiedad" & Chr(13) & "Intelectual relacionados con el Comercio", "Consejo de los Aspectos de los Derechos de Propiedad Intelectual relacionados con el Comercio")
+
+        vstrText = Replace(vstrText, vbTab, " ")
+        vstrText = Replace(vstrText, Chr(12), "")
+        vstrText = Replace(vstrText, Chr(10), "")
+        vstrText = Replace(vstrText, Chr(7), "")
+        vstrText = Replace(vstrText, Chr(160), " ")
+        vstrText = Replace(vstrText, Chr(2), "")
+        vstrText = Replace(vstrText, Chr(11), " ")
+        vstrText = Replace(vstrText, "º", " ")
+        vstrText = Replace(vstrText, Chr(30), "-")
+        
+         If ovblnReplaceNL = "." Then
+           vstrText = Replace(vstrText, "." & Chr(13), ". ")
+           vstrText = Replace(vstrText, Chr(13), ". ")
+        ElseIf ovblnReplaceNL = "-" Then
+           
+           If Right(vstrText, 1) = Chr(13) Then
+             vstrText = Mid(vstrText, 1, Len(vstrText) - 1)
+           End If
+           vstrText = Replace(vstrText, Chr(13), " - ")
+        ElseIf ovblnReplaceNL = "#" Then
+           vstrText = Replace(vstrText, Chr(13), "#")
+        Else
+            vstrText = Replace(vstrText, Chr(13), ovblnReplaceNL)
+        End If
+      
+        
+'        If ovblnReplaceNLWithDot = True Then
+'           vstrText = Replace(vstrText, "." & Chr(13), ". ")
+'           vstrText = Replace(vstrText, Chr(13), ". ")
+'        ElseIf ovblnReplaceNLWithHyphen = True Then
+'
+'           If Right(vstrText, 1) = Chr(13) Then
+'             vstrText = Mid(vstrText, 1, Len(vstrText) - 1)
+'           End If
+'           vstrText = Replace(vstrText, Chr(13), " - ")
+'        Else
+'            vstrText = Replace(vstrText, Chr(13), "")
+'        End If
+        
+        vstrText = Replace(vstrText, "..", ".")
+        vstrText = Replace(vstrText, ":.", ":")
+        vstrText = Replace(vstrText, ";.", ";")
+        vstrText = Replace(vstrText, ". . ", ". ")
+        vstrText = Replace(vstrText, ". .", ".")
+        
+     
+        vstrText = Replace(vstrText, " ,", ",")
+       ' vstrText = Replace(vstrText, ":", " : ") '02/09/2020 - Removed as this is conflicting with G/AG documents
+        vstrText = Replace(vstrText, ";", " ; ")
+        vstrText = Replace(vstrText, "  ", " ")
+        
+        vstrText = Trim(vstrText)
+        If vblnCapitalise = True Then
+        
+           If Mid(vstrText, 2, 1) = UCase(Mid(vstrText, 2, 1)) Then
+           
+              vstrText = UCase(Left(vstrText, 1)) & LCase(Mid(vstrText, 2))
+            
+            Else
+            
+              vstrText = UCase(Left(vstrText, 1)) & Mid(vstrText, 2)
+              
+            End If
+            
+            If InStr(vstrText, " – ") > 0 Then
+            
+                vstrText = Left(vstrText, InStr(vstrText, " – ")) & " - " & UCase(Mid(vstrText, InStr(vstrText, " – ") + 3, 1)) & Mid(vstrText, InStr(vstrText, " – ") + 4)
+                vstrText = Replace(vstrText, "  ", " ")
+            End If
+           
+        End If
+        
+        fnFormatTextRemoveSpecialChars = vstrText
+        
+End Function
+
+Private Function Content_G_SPS_N() As String
+
+Dim strContents As String
+Dim strContentsFinal As String
+Dim strContentParts() As String
+Dim strLanguage As String
+Dim i As Integer
+Dim strDescOfContent As String
+        ActiveDocument.StoryRanges(wdMainTextStory).Tables(1).Rows(7).Cells(2).Range.Select
+        strContents = Selection.Range.text
+        strContentParts = Split(strContents, ",")
+    
+        If InStr(LCase(strContentParts(0)), "objective") > 0 Then
+            strLanguage = "E"
+        ElseIf InStr(LCase(strContentParts(0)), "objectif") > 0 Then
+            strLanguage = "F"
+        Else
+            strLanguage = "S"
+        End If
+        
+        strContentParts(0) = Mid(strContentParts(0), InStr(strContentParts(0), ":") + 1)
+               
+        For i = 0 To UBound(strContentParts)
+          
+          strContentParts(i) = fnFormatTextRemoveSpecialChars(strContentParts(i), False, "")
+          
+          If InStr(strContentParts(i), "[X]") > 0 Then
+            
+            If Right(strContentParts(i), 1) = "." Then
+              strContentParts(i) = Left(strContentParts(i), Len(strContentParts(i)) - 1)
+            End If
+            If strContentsFinal <> "" Then
+               strContentsFinal = strContentsFinal & ","
+            End If
+            
+            strContentsFinal = strContentsFinal & Mid(strContentParts(i), InStr(strContentParts(i), "[X]") + 3)
+            
+          End If
+        Next
+' Objectif:
+' Objetivo:
+        Select Case strLanguage
+            Case "E"
+            strContentsFinal = "Objective:" & strContentsFinal
+            Case "F"
+            strContentsFinal = "Objectif:" & strContentsFinal
+            Case "S"
+            strContentsFinal = "Objetivo:" & strContentsFinal
+        End Select
+        
+       ' ActiveDocument.StoryRanges(wdMainTextStory).Tables(1).Rows(6).Cells(2).Range.Select
+        strDescOfContent = Extract_ParaWithList(ActiveDocument.StoryRanges(wdMainTextStory).Tables(1).Rows(6).Cells(2).Range)
+        
+        strContentsFinal = Trim(strContentsFinal) & ". " & Trim(strDescOfContent)
+        strContentsFinal = fnFormatTextRemoveSpecialChars(strContentsFinal, , " ")
+        
+        strContentsFinal = fnTruncateText(strContentsFinal, 1500)
+
+
+Content_G_SPS_N = strContentsFinal
+    
+End Function
+
+Private Function Content_G_TBT_N() As String
+
+Dim strContents As String
+Dim strContentsFinal As String
+Dim strContentParts() As String
+Dim strLanguage As String
+Dim strDescOfContent As String
+Dim tr As Row
+Dim strNextParagraph As String
+
+
+        strContents = ""
+        
+        For Each tr In ActiveDocument.StoryRanges(wdMainTextStory).Tables(1).Rows
+            
+            If InStr(tr.Cells(1).Range.text, "7.") > 0 Then
+                
+                strContents = fnFormatTextRemoveSpecialChars(tr.Cells(2).Range.text, False, "")
+                
+                Exit For
+            End If
+                   
+        Next
+        
+        If strContents = "" Then
+            Content_G_TBT_N = ""
+            Exit Function
+        End If
+        
+                  
+        If InStr(LCase(strContents), "objective") > 0 Then
+            strLanguage = "E"
+        ElseIf InStr(LCase(strContents), "objectif") > 0 Then
+            strLanguage = "F"
+        Else
+            strLanguage = "S"
+        End If
+        
+        strContentsFinal = Mid(strContents, InStr(strContents, ":") + 1)
+               
+' Objectif:
+' Objetivo:
+        Select Case strLanguage
+            Case "E"
+            strContentsFinal = "Objective:" & strContentsFinal
+            Case "F"
+            strContentsFinal = "Objectif:" & strContentsFinal
+            Case "S"
+            strContentsFinal = "Objetivo:" & strContentsFinal
+        End Select
+        
+       strDescOfContent = ""
+       For Each tr In ActiveDocument.StoryRanges(wdMainTextStory).Tables(1).Rows
+            
+            If tr.Cells(1).Range.text Like "6.*" Then
+                
+                strDescOfContent = Extract_ParaWithList(tr.Cells(2).Range)
+                
+                strNextParagraph = fnFormatTextRemoveSpecialChars(tr.Next.Cells(1).Range.text)
+                
+                If Not strNextParagraph Like "7.*" Then
+                    strDescOfContent = strDescOfContent & " " & tr.Next.Cells(2).Range.text
+                End If
+                Exit For
+            End If
+                   
+        Next
+        
+        If strDescOfContent = "" Then
+            Content_G_TBT_N = strContentsFinal
+            Exit Function
+        End If
+       
+        
+'        ActiveDocument.StoryRanges(wdMainTextStory).Tables(1).Rows(6).Cells(2).Range.Select
+'        strDescOfContent = Selection.Range.Text
+        
+        strContentsFinal = fnFormatTextRemoveSpecialChars(strContentsFinal, False, " ")
+        
+        strContentsFinal = Trim(strContentsFinal) & ". " & Trim(strDescOfContent)
+        
+        strContentsFinal = fnFormatTextRemoveSpecialChars(strContentsFinal)
+              
+        strContentsFinal = fnTruncateText(strContentsFinal, 1500)
+            
+    Content_G_TBT_N = strContentsFinal
+    
+End Function
+
+Private Function Extract_ParaWithList(ByRef vRange As Range) As String
+
+Dim strText As String
+Dim lngI As Long
+Dim strTextPart As String
+   strText = ""
+   For lngI = 1 To vRange.Paragraphs.Count
+      
+      strTextPart = vRange.Paragraphs(lngI).Range.text
+      If vRange.Paragraphs(lngI).Range.ListFormat.ListType <> 0 Then
+         If Not InStr(strTextPart, ";") > 0 Then
+             If lngI <> vRange.Paragraphs.Count Then
+               If vRange.Paragraphs(lngI + 1).Range.ListFormat.ListType = 0 Then
+                  
+                  If InStr(strTextPart, ".") < 0 Then
+                     strTextPart = strText & "."
+                  End If
+               ElseIf Right(strTextPart, 3) Like "*.*" Then
+                  strTextPart = Left(strTextPart, Len(strTextPart) - 3) & Replace(Right(strTextPart, 3), ".", ";")
+               Else
+
+                 strTextPart = strTextPart & ";"
+               End If
+               
+             End If
+           
+         End If
+      End If
+      strText = strText & " " & strTextPart
+   Next lngI
+   strText = Replace(strText, ";", " ;")
+Extract_ParaWithList = strText
+End Function
+
+Private Function Content_G_LIC_Q() As String
+Dim strPara As String
+
+   strPara = Extract_TextByTitle("Title 2")
+   
+   strPara = fnFormatTextRemoveSpecialChars(strPara, True, "-")
+   Content_G_LIC_Q = strPara
+End Function
+
+
+Private Function Content_G_LIC_N_3() As String
+
+   Content_G_LIC_N_3 = Extract_TOC
+End Function
+
+
+
+Private Function Content_G_LIC_N_2() As String
+
+Dim strContents As String
+Dim strContentsFinal As String
+Dim strContentParts() As String
+Dim strLanguage As String
+Dim strDescOfContent As String
+Dim intloop As Integer
+
+Dim tr As Row
+Dim oCell As Cell
+Dim intValidRow As Integer
+
+        strContents = ""
+        
+        intValidRow = 0
+        
+        For Each oCell In ActiveDocument.StoryRanges(wdMainTextStory).Tables(1).Range.Cells
+            
+            If oCell.ColumnIndex = 1 And (InStr(oCell.Range.text, "2") Or InStr(oCell.Range.text, "4")) Then
+            
+                 intValidRow = oCell.RowIndex
+              
+            End If
+            
+            If intValidRow = oCell.RowIndex Then
+            
+              If oCell.ColumnIndex = 2 Then
+                 
+                 If strContents <> "" Then
+                   strContents = strContents & " "
+                End If
+                
+                strContents = strContents & fnFormatTextRemoveSpecialChars(oCell.Range.text) & ":"
+                
+              End If
+              
+              If oCell.ColumnIndex = 3 Then
+                 
+                 If strContents <> "" Then
+                   strContents = strContents & " "
+                End If
+                strContents = strContents & oCell.Range.text
+                
+                If Right(strContents, 1) <> "." Then
+                   strContents = strContents & "."
+                End If
+                
+              End If
+            
+            End If
+            
+           If oCell.ColumnIndex = 1 And Val(oCell.Range.text) > 4 Then
+              Exit For
+           End If
+        Next
+            
+    strContentsFinal = fnFormatTextRemoveSpecialChars(strContents)
+    strContentsFinal = fnTruncateText(strContentsFinal, 1500)
+            
+    Content_G_LIC_N_2 = strContentsFinal
+    
+End Function
+
+Private Function Content_IP_N_1() As String
+
+Dim strContents As String
+Dim strContentsFinal As String
+Dim strLanguage As String
+Dim strDescOfContent As String
+     
+        ActiveDocument.StoryRanges(wdMainTextStory).Tables(1).Rows(3).Cells(1).Range.Select
+        strContents = Selection.Range.text
+           
+        If InStr(LCase(strContents), "title") > 0 Then
+            strLanguage = "E"
+        ElseIf InStr(LCase(strContents), "intitulé") > 0 Then
+            strLanguage = "F"
+        Else
+            strLanguage = "S"
+        End If
+        
+        strContentsFinal = ""
+               
+        
+        ActiveDocument.StoryRanges(wdMainTextStory).Tables(1).Rows(9).Cells(1).Range.Select
+        strDescOfContent = Selection.Range.text
+        Select Case strLanguage
+        Case "E"
+        strDescOfContent = Replace(strDescOfContent, "Brief description of the notified legal text", "")
+        Case "F"
+        strDescOfContent = Replace(strDescOfContent, "Brève description du texte juridique notifié", "")
+        Case "S"
+        strDescOfContent = Replace(strDescOfContent, "Breve descripción del texto jurídico notificado", "")
+        End Select
+               
+        strContentsFinal = fnFormatTextRemoveSpecialChars(strContentsFinal)
+        
+        strContentsFinal = Trim(strDescOfContent)
+        
+                
+        strContentsFinal = fnFormatTextRemoveSpecialChars(strContentsFinal)
+        strContentsFinal = fnTruncateText(strContentsFinal, 1500)
+
+            
+    Content_IP_N_1 = strContentsFinal
+    
+End Function
+
+Private Function Content_WT_COMTD_N() As String
+
+Dim strContents As String
+Dim strContentsFinal As String
+Dim strLanguage As String
+Dim strDescOfContent As String
+     
+        ActiveDocument.StoryRanges(wdMainTextStory).Tables(1).Rows(7).Cells(2).Range.Select
+        strContents = Selection.Range.text
+           
+        If InStr(LCase(strContents), "brief description of the agreement") > 0 Then
+            strLanguage = "E"
+        ElseIf InStr(LCase(strContents), "description succincte de l'accord") > 0 Then
+            strLanguage = "F"
+        Else
+            strLanguage = "S"
+        End If
+        
+        strContentsFinal = ""
+        
+        
+        strDescOfContent = strContents
+        Select Case strLanguage
+        Case "E"
+        strDescOfContent = Replace(strDescOfContent, "Brief description of the Agreement:", "")
+        Case "F"
+        strDescOfContent = Replace(strDescOfContent, "Description succincte de l'accord:", "")
+        Case "S"
+        strDescOfContent = Replace(strDescOfContent, "Breve descripción del Acuerdo:", "")
+        End Select
+               
+        strContentsFinal = fnFormatTextRemoveSpecialChars(strContentsFinal)
+        
+        strContentsFinal = Trim(strDescOfContent)
+        
+                
+        strContentsFinal = fnFormatTextRemoveSpecialChars(strContentsFinal)
+        strContentsFinal = fnTruncateText(strContentsFinal, 1500)
+
+            
+    Content_WT_COMTD_N = strContentsFinal
+    
+End Function
+
+Private Function Content_G_AG_N() As String
+
+Dim strContents As String
+Dim strContentsFinal As String
+Dim strLanguage As String
+Dim strDescOfContent As String
+     
+        On Error GoTo NoContent
+        
+        ActiveDocument.StoryRanges(wdMainTextStory).Paragraphs(2).Range.Sentences(2).Select
+        
+        strDescOfContent = Selection.text
+               
+        strContentsFinal = fnFormatTextRemoveSpecialChars(strContentsFinal)
+        
+        strContentsFinal = Trim(strDescOfContent)
+        
+                
+        strContentsFinal = fnFormatTextRemoveSpecialChars(strContentsFinal)
+        strContentsFinal = fnTruncateText(strContentsFinal, 1500)
+
+        Content_G_AG_N = strContentsFinal
+        Exit Function
+NoContent:
+    'MsgBox "Unable to retrieve the content."
+    Content_G_AG_N = ""
+    
+    
+End Function
+
+Private Function fnTruncateText(ByVal vstrText As String, ByVal vlnglength As Integer)
+Dim j As Integer
+
+    vstrText = Trim(vstrText)
+    If Len(vstrText) > vlnglength + 5 Then
+      vstrText = Left(vstrText, 1500)
+      For j = Len(vstrText) To 1000 Step -1
+      
+          If ISIN(Mid(vstrText, j, 1), Array(".", ";", Chr(13), Chr(10), Chr(7))) Then
+           vstrText = Left(vstrText, j - 1) & " [...]."
+            Exit For
+          End If
+      Next
+    
+    End If
+    fnTruncateText = vstrText
+        
+End Function
+Function ISIN(x, StringSetElementsAsArray) As Boolean
+
+    ISIN = InStr(1, Join(StringSetElementsAsArray, Chr(0)), _
+    x, vbTextCompare) > 0
+End Function
+
+
+Public Sub SetClipboard(sUniText As String)
+    Dim iStrPtr As Long
+    Dim iLen As Long
+    Dim iLock As Long
+    Const GMEM_MOVEABLE As Long = &H2
+    Const GMEM_ZEROINIT As Long = &H40
+    Const CF_UNICODETEXT As Long = &HD
+    OpenClipboard 0&
+    EmptyClipboard
+    iLen = LenB(sUniText) + 2&
+    iStrPtr = GlobalAlloc(GMEM_MOVEABLE Or GMEM_ZEROINIT, iLen)
+    iLock = GlobalLock(iStrPtr)
+    lstrcpy iLock, StrPtr(sUniText)
+    GlobalUnlock iStrPtr
+    SetClipboardData CF_UNICODETEXT, iStrPtr
+    CloseClipboard
+End Sub
+
+Public Function GetClipboard() As String
+    Dim iStrPtr As Long
+    Dim iLen As Long
+    Dim iLock As Long
+    Dim sUniText As String
+    Const CF_UNICODETEXT As Long = 13&
+    OpenClipboard 0&
+    If IsClipboardFormatAvailable(CF_UNICODETEXT) Then
+        iStrPtr = GetClipboardData(CF_UNICODETEXT)
+        If iStrPtr Then
+            iLock = GlobalLock(iStrPtr)
+            iLen = GlobalSize(iStrPtr)
+            sUniText = String$(iLen \ 2& - 1&, vbNullChar)
+            lstrcpy StrPtr(sUniText), iLock
+            GlobalUnlock iStrPtr
+        End If
+        GetClipboard = sUniText
+    End If
+    CloseClipboard
+End Function
+
+
+Public Sub HighlightSymbols()
+
+Dim strPattern As String
+Dim regex As Object ' RegExp
+Dim results As Variant
+Dim Result As Variant
+Dim blnSymbolNotHyperlinked As Boolean
+  Exit Sub
+   Set regex = CreateObject("VbScript.RegExp") 'New RegExp
+   strPattern = "([A-Za-z][A-Za-z0-9\/]+([A-Za-z0-9.-]+[\/]){2})"
+   regex.Global = True
+   regex.Pattern = strPattern
+    
+   
+   'get all the matches
+   ActiveDocument.StoryRanges(wdMainTextStory).Select
+    Set results = regex.Execute(ActiveDocument.Range.text)
+    
+    blnSymbolNotHyperlinked = False
+    
+    'for each match, remove the commas and put it back in the text
+    For Each Result In results
+              
+       '
+        Selection.HomeKey wdStory
+        Selection.Find.ClearAllFuzzyOptions
+        Selection.Find.ClearFormatting
+        Selection.Find.ClearHitHighlight
+        Selection.Find.Execute Result
+        Do Until Selection.Find.Found = False
+          
+          Selection.Range.HighlightColorIndex = wdYellow
+          
+          If Selection.Range.Hyperlinks.Count = 0 Then
+           blnSymbolNotHyperlinked = True
+          End If
+          Selection.MoveRight
+          Selection.Find.Execute
+     Loop
+             
+    Next Result
+
+    If blnSymbolNotHyperlinked = True Then
+       
+       MsgBox "There are symbols in this document not hyperlinked, check the yellow highlighted text", vbExclamation + vbOKOnly
+    
+    End If
+    
+    
+
+
+End Sub
